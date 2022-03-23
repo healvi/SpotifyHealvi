@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import data from './data/single-sample';
 
 function App() {
-  console.log(process.env.REACT_APP_SPOTIFY_CLIENT_ID);
-
+  const select = () => {
+    return alert('select')
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container p-3">
+        {
+    <div className="col-md-3 col-12">
+      <div className="card">
+        <img src={data.album.images[1].url} className="card-img-top" alt="imagealbum"/>
+        <div className="card-body">
+          <h5 className="card-title">{data.album.name}</h5>
+          <h6 className="card-subtitle mb-2 text-muted">{data.name}</h6>
+          <button onClick={select} type='button' className="btn btn-primary">Go somewhere</button>
+        </div>
+    </div>
+    </div>
+        }
+
+      </div>
     </div>
   );
 }
