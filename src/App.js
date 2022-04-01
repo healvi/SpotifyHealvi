@@ -1,9 +1,9 @@
 import './App.scss';
-import Spotify from './containers/Spotify';
+import SpotifyUseE from './containers/SpotifyUseE';
 function App() {
       return (
     <div className="App">
-      <Spotify/>
+      <SpotifyUseE/>
     </div>
     
   );
