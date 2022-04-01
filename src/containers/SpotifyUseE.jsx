@@ -10,7 +10,6 @@ const SpotifyUseE = () => {
   const [data, setData] = useState([]);
   const [select, setSelect] = useState([]);
   const [auth, setAuth] = useState(false);
-  const [avaliable, setAvaliable] = useState(false);
 
   useEffect(() => {
     getToken();
@@ -46,8 +45,7 @@ const SpotifyUseE = () => {
           },
         })
         .then((response) => {
-          setData(response.data.tracks.items);
-          setAvaliable(true);
+          combineData(response.data.tracks.items);
         })
         .catch((error) => {
           alert("Request Gagal");
@@ -55,6 +53,23 @@ const SpotifyUseE = () => {
             window.location.replace("/");
           }
         });
+    }
+  };
+
+  const combineData = (data) => {
+    const combine = data.map((track) => ({
+      ...track,
+      isSelected: select.find((sele) => sele.id === track.id),
+    }));
+    setData(combine);
+  };
+
+  const handleSelect = (track) => {
+    const selected = select.find((sele) => sele.id === track.id);
+    if (selected) {
+      setSelect(select.filter((sele) => sele.id !== track.id));
+    } else {
+      setSelect([...select, track]);
     }
   };
 
@@ -75,36 +90,19 @@ const SpotifyUseE = () => {
   );
 
   const getTrack =
-    avaliable && data.length > 0 ? (
+    data.length > 0 ? (
       data.map((track) => {
         if (select.length > 0) {
-          select.map((v) => {
-            if (v.id === track.id) {
-              return (track.select = true);
-            }
-            return "";
-          });
           return (
             <Card
               key={track.id}
               data={track}
-              select={setSelect}
-              allData={data}
-              allSelect={select}
-              dataUpdate={setData}
-              isSelect={track.select ? true : false}
+              select={handleSelect}
+              isSelect={track.isSelected}
             />
           );
         } else {
-          return (
-            <Card
-              key={track.id}
-              data={track}
-              select={setSelect}
-              allSelect={select}
-              isSelect={track.select ? true : false}
-            />
-          );
+          return <Card key={track.id} data={track} select={handleSelect} />;
         }
       })
     ) : (
