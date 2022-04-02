@@ -5,11 +5,11 @@ import Input from "../components/input";
 import { urlGet } from "../data/spotifyconf";
 
 const SpotifyUseE = () => {
-  const [query, setQuery] = useState("");
   const [token, setToken] = useState("");
+  const [auth, setAuth] = useState(false);
+  const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const [select, setSelect] = useState([]);
-  const [auth, setAuth] = useState(false);
 
   useEffect(() => {
     getToken();
