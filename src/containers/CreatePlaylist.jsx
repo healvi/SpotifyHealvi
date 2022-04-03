@@ -1,41 +1,22 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { urlGet, USERID } from "../data/spotifyconf";
-import CardPlaylist from "../components/playlist/CardPlaylist";
-const CreatePlaylist = () => {
+import { USERID } from "../data/spotifyconf";
+import CardPlaylist from "../components/molecule/playlist/CardPlaylist";
+const CreatePlaylist = ({ token, auth }) => {
   const [playlist, setFromPlayList] = useState({
     title: "",
     describe: "",
   });
-  const [token, setToken] = useState("");
-  const [auth, setAuth] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getToken();
     getPlaylist();
   }, [token]);
 
-  const getToken = () => {
-    if (window.location.hash.includes("access_token")) {
-      let tokenApi = window.location.hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
-
-      setToken(tokenApi);
-      setAuth(true);
-    } else {
-      setToken("");
-      setAuth(false);
-    }
-  };
-
   const getPlaylist = async () => {
     if (auth) {
-      const request = await axios
+      await axios
         .get("https://api.spotify.com/v1/me/playlists", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,14 +68,6 @@ const CreatePlaylist = () => {
         });
     }
   };
-
-  const getApiToken = window.location.hash.includes("access_token") ? (
-    <div className="btn btn-success">Anda Sudah Login</div>
-  ) : (
-    <a href={urlGet} className="btn btn-primary mt-3">
-      login
-    </a>
-  );
 
   const inputPlaylist = auth ? (
     <div className="mt-3">
@@ -179,10 +152,7 @@ const CreatePlaylist = () => {
     <div>
       <div className="container-fluid p-3">
         <div className="row">
-          <div className="col-md-3">
-            <div className="d-grid gap-2">{getApiToken}</div>
-            {inputPlaylist}
-          </div>
+          <div className="col-md-3">{inputPlaylist}</div>
           <div className="col-md-9">
             <h2 className="bg-success text-white p-2 text-center">
               Your Playlist

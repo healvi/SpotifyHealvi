@@ -1,7 +1,17 @@
+import { urlGet } from "../data/spotifyconf";
+import { Link } from "react-router-dom";
 const Navbar = () => {
+  const getApiToken = window.location.hash.includes("access_token") ? (
+    <div className="btn btn-success">Anda Sudah Login</div>
+  ) : (
+    <a href={urlGet} className="btn btn-primary">
+      login
+    </a>
+  );
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-success">
-      <div className="container-fluid">
+      <div className="container-fluid d-flex align-content-center">
         {/* <a className="navbar-brand" href="#">
           Navbar
         </a> */}
@@ -19,19 +29,21 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
+              <Link className="nav-link active" aria-current="page" to="/">
                 Track
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to="/playlist">
                 Playlist
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
+        <div className="float-right">{getApiToken}</div>
       </div>
     </nav>
   );
 };
+
 export default Navbar;

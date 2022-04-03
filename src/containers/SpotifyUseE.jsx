@@ -1,40 +1,23 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Card from "../components/card";
-import Input from "../components/input";
-import { urlGet } from "../data/spotifyconf";
+import CardSelect from "../components/molecule/track/CardSelect";
+import Input from "../components/atoms/input.jsx";
+import ModalSelect from "../components/molecule/track/ModalSelect";
 
-const SpotifyUseE = () => {
-  const [token, setToken] = useState("");
-  const [auth, setAuth] = useState(false);
+const SpotifyUseE = ({ token, auth }) => {
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const [select, setSelect] = useState([]);
-
+  const [playlist, setPlaylist] = useState([]);
+  const [modalData, setmodalData] = useState([]);
   useEffect(() => {
-    getToken();
     getData();
-  }, [query, select]);
-
-  const getToken = () => {
-    if (window.location.hash.includes("access_token")) {
-      let tokenApi = window.location.hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
-
-      setToken(tokenApi);
-      setAuth(true);
-    } else {
-      setToken("");
-      setAuth(false);
-    }
-  };
+    getPlaylist();
+  }, [query, select, token]);
 
   const getData = async () => {
     if (auth && query !== "") {
-      const request = await axios
+      await axios
         .get("https://api.spotify.com/v1/search", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,30 +39,73 @@ const SpotifyUseE = () => {
     }
   };
 
+  const getPlaylist = async () => {
+    if (auth) {
+      await axios
+        .get("https://api.spotify.com/v1/me/playlists", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setPlaylist(response.data.items);
+        })
+        .catch((error) => {
+          alert("Request Gagal");
+          if (error.response.status === 401) {
+            window.location.replace("/");
+          }
+        });
+    }
+  };
+
   const combineData = (data) => {
     const combine = data.map((track) => ({
       ...track,
-      isSelected: select.find((sele) => sele.id === track.id),
+      isSelected: select.find((sele) => sele.uri === track.uri),
     }));
     setData(combine);
   };
 
-  const handleSelect = (track) => {
-    const selected = select.find((sele) => sele.id === track.id);
+  const handleSelect = async (track, playlist) => {
+    const selected = select.find((sele) => sele.uri === track.uri);
     if (selected) {
-      setSelect(select.filter((sele) => sele.id !== track.id));
+      setSelect(select.filter((sele) => sele.uri !== track.uri));
     } else {
       setSelect([...select, track]);
+      await axios
+        .post(
+          `	https://api.spotify.com/v1/playlists/${playlist[0].id}/tracks`,
+          {},
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              position: 0,
+              uris: track.uri,
+            },
+          }
+        )
+        .then((response) => {
+          document
+            .getElementById("modalselect")
+            ?.classList.remove("show", "d-block");
+          document
+            .querySelectorAll(".modal-backdrop")
+            .forEach((el) => el.classList.remove("modal-backdrop"));
+          alert(`Berhasil insert Ke Playlist ${playlist[0].name}`);
+        })
+        .catch((error) => {
+          console.log(error);
+          // if (error.response.status === 401) {
+          //   window.location.replace("/");
+          // }
+        });
     }
   };
-
-  const getApiToken = window.location.hash.includes("access_token") ? (
-    <div className="btn btn-success">Anda Sudah Login</div>
-  ) : (
-    <a href={urlGet} className="btn btn-primary mt-3">
-      login
-    </a>
-  );
 
   const searchData = auth ? (
     <div className="">
@@ -94,15 +120,17 @@ const SpotifyUseE = () => {
       data.map((track) => {
         if (select.length > 0) {
           return (
-            <Card
+            <CardSelect
               key={track.id}
               data={track}
-              select={handleSelect}
+              select={setmodalData}
               isSelect={track.isSelected}
             />
           );
         } else {
-          return <Card key={track.id} data={track} select={handleSelect} />;
+          return (
+            <CardSelect key={track.id} data={track} select={setmodalData} />
+          );
         }
       })
     ) : (
@@ -116,16 +144,15 @@ const SpotifyUseE = () => {
       <div className="container-fluid p-3">
         <div className="row">
           <div className="col-md-3">
-            <div className="d-grid gap-2">
-              {getApiToken}
-              {searchData}
-            </div>
+            <div className="d-grid gap-2">{searchData}</div>
           </div>
           <div className="col-md-9">
             <div className="row">{getTrack}</div>
           </div>
         </div>
       </div>
+
+      <ModalSelect select={handleSelect} data={modalData} playlist={playlist} />
     </div>
   );
 };
