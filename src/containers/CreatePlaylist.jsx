@@ -4,7 +4,7 @@ import { useState } from "react";
 import { USERID } from "../data/spotifyconf";
 import CardPlaylist from "../components/molecule/playlist/CardPlaylist";
 import ModalPlaylist from "../components/molecule/playlist/ModalPlaylist";
-const CreatePlaylist = ({ token, auth }) => {
+const CreatePlaylist = ({ token, auth, me }) => {
   const [playlist, setFromPlayList] = useState({
     title: "",
     describe: "",
@@ -52,7 +52,7 @@ const CreatePlaylist = ({ token, auth }) => {
         public: true,
       };
       await axios
-        .post(`https://api.spotify.com/v1/users/${USERID}/playlists`, data, {
+        .post(`https://api.spotify.com/v1/users/${me.id}/playlists`, data, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",

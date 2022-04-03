@@ -4,7 +4,7 @@ import CardSelect from "../components/molecule/track/CardSelect";
 import Input from "../components/atoms/input.jsx";
 import ModalSelect from "../components/molecule/track/ModalSelect";
 
-const SpotifyUseE = ({ token, auth }) => {
+const SpotifyUseE = ({ token, auth, me }) => {
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const [select, setSelect] = useState([]);
@@ -127,9 +127,10 @@ const SpotifyUseE = ({ token, auth }) => {
             <CardSelect
               key={track.id}
               data={track}
-              select={setmodalData}
+              setmodal={setmodalData}
               isSelect={track.isSelected}
               display={true}
+              select={handleSelect}
             />
           );
         } else {
@@ -137,8 +138,9 @@ const SpotifyUseE = ({ token, auth }) => {
             <CardSelect
               key={track.id}
               data={track}
-              select={setmodalData}
+              setmodal={setmodalData}
               display={true}
+              select={handleSelect}
             />
           );
         }

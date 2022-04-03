@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CardPlaylist from "../playlist/CardPlaylist";
 
 const ModalSelect = ({ select, data, playlist }) => {

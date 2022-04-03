@@ -1,9 +1,9 @@
 import { urlGet } from "../data/spotifyconf";
 import { Link } from "react-router-dom";
-const Navbar = ({ auth, logout }) => {
+const Navbar = ({ auth, logout, me }) => {
   const getApiToken = auth ? (
     <button onClick={() => logout()} type="button" className="btn btn-danger">
-      Logout
+      Halo {me}, Logout
     </button>
   ) : (
     <a href={urlGet} className="btn btn-primary">

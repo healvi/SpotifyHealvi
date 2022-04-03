@@ -3,17 +3,17 @@ import Img from "../../atoms/img";
 import { Subtitle } from "../../atoms/text";
 import { Title } from "../../atoms/text";
 import ButtonSelect from "./ButtonSelect";
-const CardSelect = ({ data, select, isSelect, display = true }) => {
+const CardSelect = ({ data, setmodal, isSelect, display = true, select }) => {
   const selectbutton = isSelect ? (
     <ButtonSelect
-      select={select}
       isSelect={isSelect}
       name="Deselect"
       color="success"
       data={data}
+      select={select}
     />
   ) : (
-    <ButtonSelect select={select} name="Select" data={data} />
+    <ButtonSelect setmodal={setmodal} name="Select" data={data} />
   );
   return (
     <div className="col-md-4 col-12">

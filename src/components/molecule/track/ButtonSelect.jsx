@@ -1,10 +1,17 @@
 import React from "react";
 
-const ButtonSelect = ({ isSelect, select, name, color = "primary", data }) => {
+const ButtonSelect = ({
+  isSelect,
+  setmodal,
+  name,
+  color = "primary",
+  data,
+  select,
+}) => {
   return isSelect ? (
     <button
       onClick={() => {
-        select(data);
+        select(data, []);
       }}
       type="button"
       className={`btn btn-${color} mt-3 `}
@@ -14,7 +21,7 @@ const ButtonSelect = ({ isSelect, select, name, color = "primary", data }) => {
   ) : (
     <button
       onClick={() => {
-        select(data);
+        setmodal(data);
       }}
       type="button"
       className={`btn btn-${color} mt-3 `}
