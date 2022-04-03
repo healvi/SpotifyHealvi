@@ -1,8 +1,10 @@
 import { urlGet } from "../data/spotifyconf";
 import { Link } from "react-router-dom";
-const Navbar = () => {
-  const getApiToken = window.location.hash.includes("access_token") ? (
-    <div className="btn btn-success">Anda Sudah Login</div>
+const Navbar = ({ auth, logout }) => {
+  const getApiToken = auth ? (
+    <button onClick={() => logout()} type="button" className="btn btn-danger">
+      Logout
+    </button>
   ) : (
     <a href={urlGet} className="btn btn-primary">
       login

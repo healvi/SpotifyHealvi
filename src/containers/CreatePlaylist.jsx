@@ -3,13 +3,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { USERID } from "../data/spotifyconf";
 import CardPlaylist from "../components/molecule/playlist/CardPlaylist";
+import ModalPlaylist from "../components/molecule/playlist/ModalPlaylist";
 const CreatePlaylist = ({ token, auth }) => {
   const [playlist, setFromPlayList] = useState({
     title: "",
     describe: "",
   });
   const [data, setData] = useState([]);
-
+  const [modaldata, setModalData] = useState([]);
+  // https://api.spotify.com/v1/playlists/55w1jHg37wjz4ZTA0uQqXE/tracks
   useEffect(() => {
     getPlaylist();
   }, [token]);
@@ -27,7 +29,9 @@ const CreatePlaylist = ({ token, auth }) => {
         })
         .catch((error) => {
           alert("Request Gagal");
-          if (error.response.status === 401) {
+          if (error.response.status === 401 && error.response) {
+            window.localStorage.removeItem("token");
+            window.localStorage.removeItem("auth");
             window.location.replace("/");
           }
         });
@@ -62,7 +66,9 @@ const CreatePlaylist = ({ token, auth }) => {
         })
         .catch((error) => {
           console.log(error);
-          if (error.response.status === 401) {
+          if (error.response.status === 401 && error.response) {
+            window.localStorage.removeItem("token");
+            window.localStorage.removeItem("auth");
             window.location.replace("/");
           }
         });
@@ -140,7 +146,14 @@ const CreatePlaylist = ({ token, auth }) => {
   const playlistCard =
     data.length > 0 ? (
       data.map((playlist) => {
-        return <CardPlaylist key={playlist.id} data={playlist} track={false} />;
+        return (
+          <CardPlaylist
+            key={playlist.id}
+            data={playlist}
+            event={setModalData}
+            token={token}
+          />
+        );
       })
     ) : (
       <div className="container d-flex justify-content-center align-content-center">
@@ -161,6 +174,8 @@ const CreatePlaylist = ({ token, auth }) => {
           </div>
         </div>
       </div>
+
+      <ModalPlaylist playlist={modaldata} />
     </div>
   );
 };

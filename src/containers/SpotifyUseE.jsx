@@ -25,6 +25,8 @@ const SpotifyUseE = ({ token, auth }) => {
           params: {
             q: query,
             type: "track",
+            limit: 10,
+            market: "ID",
           },
         })
         .then((response) => {
@@ -32,7 +34,9 @@ const SpotifyUseE = ({ token, auth }) => {
         })
         .catch((error) => {
           alert("Request Gagal");
-          if (error.response.status === 401) {
+          if (error.response.status === 401 && error.response) {
+            window.localStorage.removeItem("token");
+            window.localStorage.removeItem("auth");
             window.location.replace("/");
           }
         });
@@ -52,7 +56,9 @@ const SpotifyUseE = ({ token, auth }) => {
         })
         .catch((error) => {
           alert("Request Gagal");
-          if (error.response.status === 401) {
+          if (error.response.status === 401 && error.response) {
+            window.localStorage.removeItem("token");
+            window.localStorage.removeItem("auth");
             window.location.replace("/");
           }
         });
@@ -91,18 +97,16 @@ const SpotifyUseE = ({ token, auth }) => {
         )
         .then((response) => {
           document
-            .getElementById("modalselect")
-            ?.classList.remove("show", "d-block");
-          document
             .querySelectorAll(".modal-backdrop")
             .forEach((el) => el.classList.remove("modal-backdrop"));
           alert(`Berhasil insert Ke Playlist ${playlist[0].name}`);
         })
         .catch((error) => {
-          console.log(error);
-          // if (error.response.status === 401) {
-          //   window.location.replace("/");
-          // }
+          if (error.response.status === 401 && error.response) {
+            window.localStorage.removeItem("token");
+            window.localStorage.removeItem("auth");
+            window.location.replace("/");
+          }
         });
     }
   };
@@ -112,7 +116,7 @@ const SpotifyUseE = ({ token, auth }) => {
       <Input get={setQuery} />
     </div>
   ) : (
-    <div className="btn btn-danger">Anda Belum Login</div>
+    <div className="btn btn-danger ma-5">Anda Belum Login</div>
   );
 
   const getTrack =
@@ -125,11 +129,17 @@ const SpotifyUseE = ({ token, auth }) => {
               data={track}
               select={setmodalData}
               isSelect={track.isSelected}
+              display={true}
             />
           );
         } else {
           return (
-            <CardSelect key={track.id} data={track} select={setmodalData} />
+            <CardSelect
+              key={track.id}
+              data={track}
+              select={setmodalData}
+              display={true}
+            />
           );
         }
       })

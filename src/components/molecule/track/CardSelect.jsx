@@ -3,7 +3,7 @@ import Img from "../../atoms/img";
 import { Subtitle } from "../../atoms/text";
 import { Title } from "../../atoms/text";
 import ButtonSelect from "./ButtonSelect";
-const CardSelect = ({ data, select, isSelect }) => {
+const CardSelect = ({ data, select, isSelect, display = true }) => {
   const selectbutton = isSelect ? (
     <ButtonSelect
       select={select}
@@ -28,7 +28,7 @@ const CardSelect = ({ data, select, isSelect }) => {
         <div className="card-body">
           <Title data={data.album.name} />
           <Subtitle data={data.artists[0].name} />
-          {selectbutton}
+          {display ? selectbutton : ""}
         </div>
       </div>
     </div>

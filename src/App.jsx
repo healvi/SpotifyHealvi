@@ -10,36 +10,47 @@ const App = () => {
   const [auth, setAuth] = useState(false);
 
   useEffect(() => {
-    getToken();
-  }, []);
-
-  const getToken = () => {
-    if (window.location.hash.includes("access_token")) {
-      let tokenApi = window.location.hash
+    const hash = window.location.hash;
+    let token = window.localStorage.getItem("token");
+    let auth = window.localStorage.getItem("auth");
+    if (!token && hash) {
+      token = hash
         .substring(1)
         .split("&")
         .find((elem) => elem.startsWith("access_token"))
         .split("=")[1];
-
-      setToken(tokenApi);
+      window.location.hash = "";
+      window.localStorage.setItem("token", token);
+      window.localStorage.setItem("auth", true);
+      setToken(token);
       setAuth(true);
     } else {
-      setToken("");
-      setAuth(false);
+      setToken(token);
+      setAuth(auth);
     }
+  }, []);
+
+  const logout = () => {
+    setToken("");
+    setAuth(false);
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("auth");
+    window.location.reload();
   };
   return (
     <div className="App">
-      <Navbar />
-      {/* <SpotifyUseE token={token} auth={auth} /> */}
-      {/* <CreatePlaylist  token={token} auth={auth} /> */}
-      <Routes>
-        <Route path="/" element={<SpotifyUseE token={token} auth={auth} />} />
-        <Route
-          path="/playlist"
-          element={<CreatePlaylist token={token} auth={auth} />}
-        />
-      </Routes>
+      <Navbar auth={auth} logout={logout} />
+      {token ? (
+        <Routes>
+          <Route path="/" element={<SpotifyUseE token={token} auth={auth} />} />
+          <Route
+            path="/playlist"
+            element={<CreatePlaylist token={token} auth={auth} />}
+          />
+        </Routes>
+      ) : (
+        <div className="btn btn-danger">Anda Belum Login</div>
+      )}
     </div>
   );
 };

@@ -43,9 +43,11 @@ class Spotify extends Component {
           avaliable: true,
         });
       })
-      .catch(() => {
+      .catch((error) => {
         alert("Request Gagal");
-        if (this.state.token === "") {
+        if (error.response.status === 401 && error.response) {
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("auth");
           window.location.replace("/");
         }
       });
