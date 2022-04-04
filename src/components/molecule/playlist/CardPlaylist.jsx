@@ -5,8 +5,11 @@ import { Title } from "../../atoms/text";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
+import { setToken } from "../../../store/Auth";
+import { useDispatch } from "react-redux";
 
 const CardPlaylist = ({ data, event, token }) => {
+  const dispatch = useDispatch();
   const requestItem = async () => {
     const request = await axios
       .get(`${data.tracks.href}`, {
@@ -20,6 +23,7 @@ const CardPlaylist = ({ data, event, token }) => {
       .catch((error) => {
         alert("Request Gagal");
         if (error.response.status === 401 && error.response) {
+          dispatch(setToken(""));
           window.localStorage.removeItem("token");
           window.localStorage.removeItem("auth");
           window.location.replace("/");

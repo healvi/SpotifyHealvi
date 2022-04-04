@@ -3,12 +3,17 @@ import { useState, useEffect } from "react";
 import CardSelect from "../components/molecule/track/CardSelect";
 import Input from "../components/atoms/input.jsx";
 import ModalSelect from "../components/molecule/track/ModalSelect";
+import { useSelector, useDispatch } from "react-redux";
+import { setPlaylist } from "../store/Playlist";
+import { setTrack } from "../store/Tracks";
+import { setToken } from "../store/Auth";
 
-const SpotifyUseE = ({ token, auth, me }) => {
-  const [query, setQuery] = useState("");
-  const [data, setData] = useState([]);
+const SpotifyUseE = () => {
+  const token = useSelector((state) => state.Auth.token);
+  const data = useSelector((state) => state.Track.tracks);
+  const dispatch = useDispatch();
   const [select, setSelect] = useState([]);
-  const [playlist, setPlaylist] = useState([]);
+  const [query, setQuery] = useState("");
   const [modalData, setmodalData] = useState([]);
   useEffect(() => {
     getData();
@@ -16,7 +21,7 @@ const SpotifyUseE = ({ token, auth, me }) => {
   }, [query, select, token]);
 
   const getData = async () => {
-    if (auth && query !== "") {
+    if (query !== "") {
       await axios
         .get("https://api.spotify.com/v1/search", {
           headers: {
@@ -35,6 +40,7 @@ const SpotifyUseE = ({ token, auth, me }) => {
         .catch((error) => {
           alert("Request Gagal");
           if (error.response.status === 401 && error.response) {
+            dispatch(setToken(""));
             window.localStorage.removeItem("token");
             window.localStorage.removeItem("auth");
             window.location.replace("/");
@@ -44,7 +50,7 @@ const SpotifyUseE = ({ token, auth, me }) => {
   };
 
   const getPlaylist = async () => {
-    if (auth) {
+    if (token) {
       await axios
         .get("https://api.spotify.com/v1/me/playlists", {
           headers: {
@@ -52,11 +58,12 @@ const SpotifyUseE = ({ token, auth, me }) => {
           },
         })
         .then((response) => {
-          setPlaylist(response.data.items);
+          dispatch(setPlaylist(response.data.items));
         })
         .catch((error) => {
           alert("Request Gagal");
           if (error.response.status === 401 && error.response) {
+            dispatch(setToken(""));
             window.localStorage.removeItem("token");
             window.localStorage.removeItem("auth");
             window.location.replace("/");
@@ -70,7 +77,7 @@ const SpotifyUseE = ({ token, auth, me }) => {
       ...track,
       isSelected: select.find((sele) => sele.uri === track.uri),
     }));
-    setData(combine);
+    dispatch(setTrack(combine));
   };
 
   const handleSelect = async (track, playlist) => {
@@ -111,7 +118,7 @@ const SpotifyUseE = ({ token, auth, me }) => {
     }
   };
 
-  const searchData = auth ? (
+  const searchData = token ? (
     <div className="">
       <Input get={setQuery} />
     </div>
@@ -164,7 +171,7 @@ const SpotifyUseE = ({ token, auth, me }) => {
         </div>
       </div>
 
-      <ModalSelect select={handleSelect} data={modalData} playlist={playlist} />
+      <ModalSelect select={handleSelect} data={modalData} />
     </div>
   );
 };

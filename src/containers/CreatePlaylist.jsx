@@ -1,10 +1,14 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { USERID } from "../data/spotifyconf";
+import { useSelector, useDispatch } from "react-redux";
 import CardPlaylist from "../components/molecule/playlist/CardPlaylist";
 import ModalPlaylist from "../components/molecule/playlist/ModalPlaylist";
-const CreatePlaylist = ({ token, auth, me }) => {
+import { setToken } from "../store/Auth";
+const CreatePlaylist = () => {
+  const token = useSelector((state) => state.Auth.token);
+  const me = useSelector((state) => state.User.user);
+  const dispatch = useDispatch();
   const [playlist, setFromPlayList] = useState({
     title: "",
     describe: "",
@@ -17,7 +21,7 @@ const CreatePlaylist = ({ token, auth, me }) => {
   }, [token]);
 
   const getPlaylist = async () => {
-    if (auth) {
+    if (token) {
       await axios
         .get("https://api.spotify.com/v1/me/playlists", {
           headers: {
@@ -30,6 +34,7 @@ const CreatePlaylist = ({ token, auth, me }) => {
         .catch((error) => {
           alert("Request Gagal");
           if (error.response.status === 401 && error.response) {
+            dispatch(setToken(""));
             window.localStorage.removeItem("token");
             window.localStorage.removeItem("auth");
             window.location.replace("/");
@@ -45,7 +50,7 @@ const CreatePlaylist = ({ token, auth, me }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (auth) {
+    if (token) {
       const data = {
         name: playlist.title,
         description: playlist.describe,
@@ -67,6 +72,8 @@ const CreatePlaylist = ({ token, auth, me }) => {
         .catch((error) => {
           console.log(error);
           if (error.response.status === 401 && error.response) {
+            dispatch(setToken(""));
+
             window.localStorage.removeItem("token");
             window.localStorage.removeItem("auth");
             window.location.replace("/");
@@ -75,7 +82,7 @@ const CreatePlaylist = ({ token, auth, me }) => {
     }
   };
 
-  const inputPlaylist = auth ? (
+  const inputPlaylist = token ? (
     <div className="mt-3">
       <h3>Input Playlist Form</h3>
       <form onSubmit={handleSubmit} className="mt-3">

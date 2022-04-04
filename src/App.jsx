@@ -5,16 +5,17 @@ import "./App.scss";
 import Navbar from "./components/Navbar";
 import CreatePlaylist from "./containers/CreatePlaylist";
 import SpotifyUseE from "./containers/SpotifyUseE";
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "./store/Auth";
+import { setUser } from "./store/User";
 
 const App = () => {
-  const [token, setToken] = useState("");
-  const [auth, setAuth] = useState(false);
-  const [user, setUser] = useState({});
-
+  const [token, setTokena] = useState("");
+  const dispatch = useDispatch();
   useEffect(() => {
     const hash = window.location.hash;
     let token = window.localStorage.getItem("token");
-    let auth = window.localStorage.getItem("auth");
+
     if (!token && hash) {
       token = hash
         .substring(1)
@@ -23,17 +24,14 @@ const App = () => {
         .split("=")[1];
       window.location.hash = "";
       window.localStorage.setItem("token", token);
-      window.localStorage.setItem("auth", true);
-      setToken(token);
-      setAuth(true);
+      dispatch(setToken(token));
+      setTokena(token);
     } else {
-      setToken(token);
-      setAuth(auth);
+      dispatch(setToken(token));
+      setTokena(token);
     }
     if (token) {
       setMeProfile(token);
-      window.localStorage.setItem("profileId", user.id);
-      window.localStorage.setItem("profileName", user.display_name);
     }
   }, []);
 
@@ -45,11 +43,15 @@ const App = () => {
         },
       })
       .then((response) => {
-        setUser(response.data);
+        dispatch(setUser(response.data));
+        window.localStorage.setItem("profileId", response.data.id);
+        window.localStorage.setItem("profileName", response.data.display_name);
       })
       .catch((error) => {
         alert("Request Gagal");
         if (error.response.status === 401 && error.response) {
+          dispatch(setToken(""));
+
           window.localStorage.removeItem("token");
           window.localStorage.removeItem("auth");
           window.localStorage.removeItem("profileId");
@@ -59,8 +61,8 @@ const App = () => {
       });
   };
   const logout = () => {
-    setToken("");
-    setAuth(false);
+    dispatch(setToken(""));
+
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("auth");
     window.localStorage.removeItem("profileId");
@@ -69,17 +71,11 @@ const App = () => {
   };
   return (
     <div className="App">
-      <Navbar auth={auth} logout={logout} me={user.display_name} />
+      <Navbar logout={logout} />
       {token ? (
         <Routes>
-          <Route
-            path="/"
-            element={<SpotifyUseE token={token} auth={auth} me={user} />}
-          />
-          <Route
-            path="/playlist"
-            element={<CreatePlaylist token={token} auth={auth} me={user} />}
-          />
+          <Route path="/" element={<SpotifyUseE />} />
+          <Route path="/playlist" element={<CreatePlaylist />} />
         </Routes>
       ) : (
         <div className="btn btn-danger">Anda Belum Login</div>
