@@ -1,74 +1,47 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.scss";
 import Navbar from "./components/Navbar";
 import CreatePlaylist from "./containers/CreatePlaylist";
 import SpotifyUseE from "./containers/SpotifyUseE";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setToken } from "./store/Auth";
 import { setUser } from "./store/User";
+import { isAuth } from "./utils/OAuth";
+import { deleteStorage } from "./utils/storage";
+import { getUserApi } from "./utils/api/userApi";
 
 const App = () => {
-  const [token, setTokena] = useState("");
+  let token = window.localStorage.getItem("token");
   const dispatch = useDispatch();
   useEffect(() => {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
-
-    if (!token && hash) {
-      token = hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
-      window.location.hash = "";
-      window.localStorage.setItem("token", token);
+    if (isAuth) {
       dispatch(setToken(token));
-      setTokena(token);
-    } else {
-      dispatch(setToken(token));
-      setTokena(token);
-    }
-    if (token) {
       setMeProfile(token);
     }
   }, []);
 
   const setMeProfile = async (tokena) => {
-    await axios
-      .get("https://api.spotify.com/v1/me", {
-        headers: {
-          Authorization: `Bearer ${tokena}`,
-        },
-      })
-      .then((response) => {
-        dispatch(setUser(response.data));
-        window.localStorage.setItem("profileId", response.data.id);
-        window.localStorage.setItem("profileName", response.data.display_name);
-      })
-      .catch((error) => {
-        alert("Request Gagal");
-        if (error.response.status === 401 && error.response) {
+    try {
+      await getUserApi()
+        .then((response) => {
+          dispatch(setUser(response.data));
+        })
+        .catch(() => {
+          deleteStorage();
           dispatch(setToken(""));
-
-          window.localStorage.removeItem("token");
-          window.localStorage.removeItem("auth");
-          window.localStorage.removeItem("profileId");
-          window.localStorage.removeItem("profileName");
-          window.location.replace("/");
-        }
-      });
+        });
+    } catch (error) {
+      console.log("error");
+    }
   };
+
   const logout = () => {
     dispatch(setToken(""));
-
-    window.localStorage.removeItem("token");
-    window.localStorage.removeItem("auth");
-    window.localStorage.removeItem("profileId");
-    window.localStorage.removeItem("profileName");
+    deleteStorage();
     window.location.reload();
   };
+
   return (
     <div className="App">
       <Navbar logout={logout} />

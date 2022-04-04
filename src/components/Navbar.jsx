@@ -1,4 +1,4 @@
-import { urlGet } from "../data/spotifyconf";
+import { urlGet } from "../utils/spotifyconf";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 const Navbar = ({ logout }) => {
@@ -18,9 +18,6 @@ const Navbar = ({ logout }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-success">
       <div className="container-fluid d-flex align-content-center">
-        {/* <a className="navbar-brand" href="#">
-          Navbar
-        </a> */}
         <button
           className="navbar-toggler"
           type="button"

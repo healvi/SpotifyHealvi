@@ -7,6 +7,16 @@ import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/js/bootstrap.bundle";
 import store from './store'
 import { Provider } from 'react-redux'
+import { authGenerate } from './utils/OAuth';
+import { deleteStorage, setStorage } from './utils/storage';
+(() => {
+  try {
+    const {token} = authGenerate();
+    setStorage('token',token)
+  } catch (error) {
+    deleteStorage()
+  }
+})()
 ReactDOM.render(
   <React.StrictMode>
      <BrowserRouter>

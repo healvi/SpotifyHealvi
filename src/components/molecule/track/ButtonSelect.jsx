@@ -1,13 +1,9 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setModalTrack } from "../../../store/Tracks";
 
-const ButtonSelect = ({
-  isSelect,
-  setmodal,
-  name,
-  color = "primary",
-  data,
-  select,
-}) => {
+const ButtonSelect = ({ isSelect, name, color = "primary", data, select }) => {
+  const dispatch = useDispatch();
   return isSelect ? (
     <button
       onClick={() => {
@@ -21,7 +17,7 @@ const ButtonSelect = ({
   ) : (
     <button
       onClick={() => {
-        setmodal(data);
+        dispatch(setModalTrack(data));
       }}
       type="button"
       className={`btn btn-${color} mt-3 `}

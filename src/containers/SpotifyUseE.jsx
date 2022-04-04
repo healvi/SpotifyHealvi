@@ -1,20 +1,19 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import CardSelect from "../components/molecule/track/CardSelect";
 import Input from "../components/atoms/input.jsx";
 import ModalSelect from "../components/molecule/track/ModalSelect";
 import { useSelector, useDispatch } from "react-redux";
 import { setPlaylist } from "../store/Playlist";
-import { setTrack } from "../store/Tracks";
-import { setToken } from "../store/Auth";
-
+import { setSelectTrack, setTrack } from "../store/Tracks";
+import { getPlaylistApi, postItemPlaylistApi } from "../utils/api/playlistApi";
+import { searchTrackApi } from "../utils/api/searchTrackApi";
 const SpotifyUseE = () => {
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.Auth.token);
   const data = useSelector((state) => state.Track.tracks);
-  const dispatch = useDispatch();
-  const [select, setSelect] = useState([]);
+  const modalData = useSelector((state) => state.Track.modalTrack);
+  const select = useSelector((state) => state.Track.selectTrack);
   const [query, setQuery] = useState("");
-  const [modalData, setmodalData] = useState([]);
   useEffect(() => {
     getData();
     getPlaylist();
@@ -22,53 +21,24 @@ const SpotifyUseE = () => {
 
   const getData = async () => {
     if (query !== "") {
-      await axios
-        .get("https://api.spotify.com/v1/search", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            q: query,
-            type: "track",
-            limit: 10,
-            market: "ID",
-          },
-        })
-        .then((response) => {
-          combineData(response.data.tracks.items);
-        })
-        .catch((error) => {
-          alert("Request Gagal");
-          if (error.response.status === 401 && error.response) {
-            dispatch(setToken(""));
-            window.localStorage.removeItem("token");
-            window.localStorage.removeItem("auth");
-            window.location.replace("/");
-          }
-        });
+      const params = {
+        q: query,
+        type: "track",
+        limit: 10,
+        market: "ID",
+      };
+      searchTrackApi(params).then((response) => {
+        combineData(response.data.tracks.items);
+      });
     }
   };
 
   const getPlaylist = async () => {
-    if (token) {
-      await axios
-        .get("https://api.spotify.com/v1/me/playlists", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          dispatch(setPlaylist(response.data.items));
-        })
-        .catch((error) => {
-          alert("Request Gagal");
-          if (error.response.status === 401 && error.response) {
-            dispatch(setToken(""));
-            window.localStorage.removeItem("token");
-            window.localStorage.removeItem("auth");
-            window.location.replace("/");
-          }
-        });
+    try {
+      const { data } = await getPlaylistApi();
+      dispatch(setPlaylist(data.items));
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -83,38 +53,16 @@ const SpotifyUseE = () => {
   const handleSelect = async (track, playlist) => {
     const selected = select.find((sele) => sele.uri === track.uri);
     if (selected) {
-      setSelect(select.filter((sele) => sele.uri !== track.uri));
+      dispatch(setSelectTrack(select.filter((sele) => sele.uri !== track.uri)));
     } else {
-      setSelect([...select, track]);
-      await axios
-        .post(
-          `	https://api.spotify.com/v1/playlists/${playlist[0].id}/tracks`,
-          {},
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              position: 0,
-              uris: track.uri,
-            },
-          }
-        )
-        .then((response) => {
-          document
-            .querySelectorAll(".modal-backdrop")
-            .forEach((el) => el.classList.remove("modal-backdrop"));
+      try {
+        postItemPlaylistApi(playlist[0].id, track.uri).then(() => {
           alert(`Berhasil insert Ke Playlist ${playlist[0].name}`);
-        })
-        .catch((error) => {
-          if (error.response.status === 401 && error.response) {
-            window.localStorage.removeItem("token");
-            window.localStorage.removeItem("auth");
-            window.location.replace("/");
-          }
+          dispatch(setSelectTrack([...select, track]));
         });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -134,7 +82,6 @@ const SpotifyUseE = () => {
             <CardSelect
               key={track.id}
               data={track}
-              setmodal={setmodalData}
               isSelect={track.isSelected}
               display={true}
               select={handleSelect}
@@ -145,7 +92,6 @@ const SpotifyUseE = () => {
             <CardSelect
               key={track.id}
               data={track}
-              setmodal={setmodalData}
               display={true}
               select={handleSelect}
             />
