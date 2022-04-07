@@ -2,14 +2,9 @@ import React from "react";
 import Img from "../../atoms/img";
 import { Subtitle } from "../../atoms/text";
 import { Title } from "../../atoms/text";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
-import { setToken } from "../../../store/Auth";
-import { useDispatch } from "react-redux";
 import { getTrackPlaylistApi } from "../../../utils/api/playlistApi";
 
-const CardPlaylist = ({ data, event, token }) => {
+const CardPlaylist = ({ data, event }) => {
   const requestItem = async () => {
     console.log(data.tracks.href);
     getTrackPlaylistApi(data.tracks.href).then((response) => {
