@@ -1,33 +1,39 @@
-import { useState, useEffect, Fragment } from "react";
-import CardSelect from "../components/molecule/track/CardSelect";
-import Input from "../components/atoms/input.jsx";
-import ModalSelect from "../components/molecule/track/ModalSelect";
-import { useSelector, useDispatch } from "react-redux";
-import { setPlaylist } from "../store/Playlist";
-import { setSelectTrack, setTrack } from "../store/Tracks";
-import { getPlaylistApi, postItemPlaylistApi } from "../utils/api/playlistApi";
-import { searchTrackApi } from "../utils/api/searchTrackApi";
-import { urlGet } from "../utils/spotifyconf";
-import Navbar from "../components/Navbar";
+import {
+  React, useState, useEffect, Fragment,
+} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import CardSelect from '../components/molecule/track/CardSelect';
+import Input from '../components/atoms/input';
+import ModalSelect from '../components/molecule/track/ModalSelect';
+import { setPlaylist } from '../store/Playlist';
+import { setSelectTrack, setTrack } from '../store/Tracks';
+import { getPlaylistApi, postItemPlaylistApi } from '../utils/api/playlistApi';
+import searchTrackApi from '../utils/api/searchTrackApi';
+import { urlGet } from '../utils/spotifyconf';
+import Navbar from '../components/Navbar';
+
 const SpotifyUseE = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.Auth.token);
   const data = useSelector((state) => state.Track.tracks);
   const modalData = useSelector((state) => state.Track.modalTrack);
   const select = useSelector((state) => state.Track.selectTrack);
-  const [query, setQuery] = useState("");
-  useEffect(() => {
-    getData();
-    getPlaylist();
-  }, [query, select, token]);
+  const [query, setQuery] = useState('');
 
+  const combineData = (datas) => {
+    const combine = datas.map((track) => ({
+      ...track,
+      isSelected: select.find((sele) => sele.uri === track.uri),
+    }));
+    dispatch(setTrack(combine));
+  };
   const getData = async () => {
-    if (query !== "") {
+    if (query !== '') {
       const params = {
         q: query,
-        type: "track",
+        type: 'track',
         limit: 10,
-        market: "ID",
+        market: 'ID',
       };
       searchTrackApi(params).then((response) => {
         combineData(response.data.tracks.items);
@@ -42,14 +48,6 @@ const SpotifyUseE = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const combineData = (data) => {
-    const combine = data.map((track) => ({
-      ...track,
-      isSelected: select.find((sele) => sele.uri === track.uri),
-    }));
-    dispatch(setTrack(combine));
   };
 
   const handleSelect = async (track, playlist) => {
@@ -68,6 +66,11 @@ const SpotifyUseE = () => {
     }
   };
 
+  useEffect(() => {
+    getData();
+    getPlaylist();
+  }, [query, select, token]);
+
   const searchData = token ? (
     <div className="">
       <Input get={setQuery} />
@@ -78,38 +81,36 @@ const SpotifyUseE = () => {
     </a>
   );
 
-  const getTrack =
-    data.length > 0 ? (
-      data.map((track) => {
-        if (select.length > 0) {
-          return (
-            <CardSelect
-              key={track.id}
-              data={track}
-              isSelect={track.isSelected}
-              display={true}
-              select={handleSelect}
-            />
-          );
-        } else {
-          return (
-            <CardSelect
-              key={track.id}
-              data={track}
-              display={true}
-              select={handleSelect}
-            />
-          );
-        }
-      })
-    ) : (
-      <div className="container d-flex justify-content-center align-content-center">
-        <h1>Empty</h1>
-      </div>
-    );
+  const getTrack = data.length > 0 ? (
+    data.map((track) => {
+      if (select.length > 0) {
+        return (
+          <CardSelect
+            key={track.id}
+            data={track}
+            isSelect={track.isSelected}
+            display
+            select={handleSelect}
+          />
+        );
+      }
+      return (
+        <CardSelect
+          key={track.id}
+          data={track}
+          display
+          select={handleSelect}
+        />
+      );
+    })
+  ) : (
+    <div className="container d-flex justify-content-center align-content-center">
+      <h1>Empty</h1>
+    </div>
+  );
 
   return (
-    <Fragment>
+    <>
       <Navbar />
       <div>
         <div className="container-fluid p-3">
@@ -125,7 +126,7 @@ const SpotifyUseE = () => {
 
         <ModalSelect select={handleSelect} data={modalData} />
       </div>
-    </Fragment>
+    </>
   );
 };
 

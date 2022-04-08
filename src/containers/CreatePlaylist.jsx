@@ -1,21 +1,21 @@
-import { Fragment } from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import Navbar from "../components/Navbar";
-import { postNewPlaylistApi } from "../utils/api/playlistApi";
-import { urlGet } from "../utils/spotifyconf";
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Navbar from '../components/Navbar';
+import { postNewPlaylistApi } from '../utils/api/playlistApi';
+import { urlGet } from '../utils/spotifyconf';
+
 const CreatePlaylist = () => {
   const token = useSelector((state) => state.Auth.token);
   const me = useSelector((state) => state.User.user);
   const [playlist, setFromPlayList] = useState({
-    title: "",
-    describe: "",
+    title: '',
+    describe: '',
   });
   const handleForm = (e) => {
     const { name, value } = e.target;
     setFromPlayList({ ...playlist, [name]: value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (token) {
@@ -26,8 +26,8 @@ const CreatePlaylist = () => {
       };
       try {
         postNewPlaylistApi(me.id, data).then(() => {
-          setFromPlayList({ title: "", describe: "" });
-          alert("Berhasil membuat palylist");
+          setFromPlayList({ title: '', describe: '' });
+          alert('Berhasil membuat palylist');
         });
       } catch (error) {
         console.log(error);
@@ -50,10 +50,10 @@ const CreatePlaylist = () => {
             onChange={handleForm}
             className={`form-control ${
               playlist.title.length >= 10
-                ? "is-valid"
-                : playlist.title !== ""
-                ? "is-invalid"
-                : ""
+                ? 'is-valid'
+                : playlist.title !== ''
+                  ? 'is-invalid'
+                  : ''
             }`}
             id="titleplaylist"
             aria-describedby="titleplauhelp"
@@ -88,9 +88,9 @@ const CreatePlaylist = () => {
         <button
           type="submit"
           className={`btn btn-primary ${
-            playlist.title.length >= 10 && playlist.describe !== ""
-              ? ""
-              : "disabled"
+            playlist.title.length >= 10 && playlist.describe !== ''
+              ? ''
+              : 'disabled'
           }`}
         >
           Submit
@@ -106,17 +106,17 @@ const CreatePlaylist = () => {
   );
 
   return (
-    <Fragment>
+    <>
       <Navbar />
       <div>
         <div className="container-fluid p-3">
           <div className="row">
             <div className="col-md-3">{inputPlaylist}</div>
-            <div className="col-md-9"></div>
+            <div className="col-md-9" />
           </div>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

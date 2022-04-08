@@ -1,5 +1,4 @@
-import resource from "../resource"
+import resource from '../resource';
 
-export const getUserApi =  () => {
-    return resource.get('/me')
-}
+const getUserApi = () => resource.get('/me');
+export default getUserApi;

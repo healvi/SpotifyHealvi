@@ -1,8 +1,10 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { setModalTrack } from "../../../store/Tracks";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setModalTrack } from '../../../store/Tracks';
 
-const ButtonSelect = ({ isSelect, name, color = "primary", data, select }) => {
+const ButtonSelect = ({
+  isSelect, name, color = 'primary', data, select,
+}) => {
   const dispatch = useDispatch();
   return isSelect ? (
     <button

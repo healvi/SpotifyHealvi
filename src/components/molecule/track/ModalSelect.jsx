@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import CardPlaylist from "../playlist/CardPlaylist";
+import React, { useState } from 'react';
+
+import { useSelector } from 'react-redux';
+import CardPlaylist from '../playlist/CardPlaylist';
 
 const ModalSelect = ({ select, data }) => {
   const playlist = useSelector((state) => state.Playlist.playlist);
@@ -13,7 +14,7 @@ const ModalSelect = ({ select, data }) => {
         className="form-check-input mt-3 bg-black"
         type="radio"
         name="flexRadioDefault"
-        id={v.id + "id"}
+        id={`${v.id}id`}
       />
     </div>
   ));
@@ -33,9 +34,10 @@ const ModalSelect = ({ select, data }) => {
             </h5>
             <button
               type="button"
+              aria-label="Button close"
               className="btn-close"
               data-bs-dismiss="modal"
-            ></button>
+            />
           </div>
           <div className="modal-body">
             <div className="row">
@@ -59,7 +61,7 @@ const ModalSelect = ({ select, data }) => {
               }}
               type="button"
               className={`btn btn-primary ${
-                choseplaylist.length > 0 ? "" : "disabled"
+                choseplaylist.length > 0 ? '' : 'disabled'
               }`}
             >
               Save changes

@@ -1,9 +1,11 @@
-import { urlGet } from "../utils/spotifyconf";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { Logout } from "../utils/OAuth";
-import { setToken } from "../store/Auth";
-const Navbar = ({ logout }) => {
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { urlGet } from '../utils/spotifyconf';
+import { Logout } from '../utils/OAuth';
+import { setToken } from '../store/Auth';
+
+const Navbar = () => {
   const token = useSelector((state) => state.Auth.token);
   const me = useSelector((state) => state.User.user).display_name;
   const dispatch = useDispatch;
@@ -11,12 +13,15 @@ const Navbar = ({ logout }) => {
     <button
       onClick={() => {
         Logout();
-        dispatch(setToken(""));
+        dispatch(setToken(''));
       }}
       type="button"
       className="btn btn-danger"
     >
-      Halo {me}, Logout
+      Halo
+      {' '}
+      {me}
+      , Logout
     </button>
   ) : (
     <a href={urlGet} className="btn btn-primary">
@@ -36,7 +41,7 @@ const Navbar = ({ logout }) => {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">

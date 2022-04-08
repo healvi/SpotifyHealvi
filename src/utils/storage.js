@@ -1,11 +1,5 @@
-export const setStorage = (key, item) => {
-    return window.localStorage.setItem(key, item);
-}
+export const setStorage = (key, item) => window.localStorage.setItem(key, item);
 
-export const getStorage = (key) => {
-    return window.localStorage.getItem(key);
-}
+export const getStorage = (key) => window.localStorage.getItem(key);
 
-export const deleteStorage = () => {
-    return window.localStorage.clear();
-}
+export const deleteStorage = () => window.localStorage.clear();

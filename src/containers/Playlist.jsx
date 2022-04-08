@@ -1,19 +1,16 @@
-import { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import CardPlaylist from "../components/molecule/playlist/CardPlaylist";
-import ModalPlaylist from "../components/molecule/playlist/ModalPlaylist";
-import Navbar from "../components/Navbar";
-import { setPlaylist } from "../store/Playlist";
-import { getPlaylistApi } from "../utils/api/playlistApi";
+import { React, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CardPlaylist from '../components/molecule/playlist/CardPlaylist';
+import ModalPlaylist from '../components/molecule/playlist/ModalPlaylist';
+import Navbar from '../components/Navbar';
+import { setPlaylist } from '../store/Playlist';
+import { getPlaylistApi } from '../utils/api/playlistApi';
 
 const Playlist = () => {
   const token = useSelector((state) => state.Auth.token);
-  const data = useSelector((state) => state.Playlist.playlist);
+  const datas = useSelector((state) => state.Playlist.playlist);
   const dispatch = useDispatch();
   const [modaldata, setModalData] = useState([]);
-  useEffect(() => {
-    getPlaylist();
-  }, [token]);
 
   const getPlaylist = async () => {
     try {
@@ -23,25 +20,25 @@ const Playlist = () => {
       console.log(error);
     }
   };
-  const playlistCard =
-    data.length > 0 ? (
-      data.map((playlist) => {
-        return (
-          <CardPlaylist
-            key={playlist.id}
-            data={playlist}
-            event={setModalData}
-            token={token}
-          />
-        );
-      })
-    ) : (
-      <div className="container d-flex justify-content-center align-content-center">
-        <h1>Empty</h1>
-      </div>
-    );
+  const playlistCard = datas.length > 0 ? (
+    datas.map((playlist) => (
+      <CardPlaylist
+        key={playlist.id}
+        data={playlist}
+        event={setModalData}
+        token={token}
+      />
+    ))
+  ) : (
+    <div className="container d-flex justify-content-center align-content-center">
+      <h1>Empty</h1>
+    </div>
+  );
+  useEffect(() => {
+    getPlaylist();
+  }, [token]);
   return (
-    <Fragment>
+    <>
       <Navbar />
       <div>
         <div className="container-fluid p-3">
@@ -56,7 +53,7 @@ const Playlist = () => {
 
         <ModalPlaylist playlist={modaldata} event={setModalData} />
       </div>
-    </Fragment>
+    </>
   );
 };
 

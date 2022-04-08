@@ -1,5 +1,5 @@
-const DetailPlaylist = () => {
-  return <div className="">Playlist Details</div>;
-};
+import React from 'react';
+
+const DetailPlaylist = () => <div>Playlist Details</div>;
 
 export default DetailPlaylist;

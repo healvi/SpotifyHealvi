@@ -1,9 +1,11 @@
-import React from "react";
-import Img from "../../atoms/img";
-import { Subtitle } from "../../atoms/text";
-import { Title } from "../../atoms/text";
-import ButtonSelect from "./ButtonSelect";
-const CardSelect = ({ data, isSelect, display = true, select }) => {
+import React from 'react';
+import Img from '../../atoms/img';
+import { Subtitle, Title } from '../../atoms/text';
+import ButtonSelect from './ButtonSelect';
+
+const CardSelect = ({
+  data, isSelect, display = true, select,
+}) => {
   const selectbutton = isSelect ? (
     <ButtonSelect
       isSelect={isSelect}
@@ -22,13 +24,13 @@ const CardSelect = ({ data, isSelect, display = true, select }) => {
           data={
             data.album.images.length !== 0
               ? data.album.images[0].url
-              : "http://placeimg.com/640/640/nature"
+              : 'http://placeimg.com/640/640/nature'
           }
         />
         <div className="card-body">
           <Title data={data.album.name} />
           <Subtitle data={data.artists[0].name} />
-          {display ? selectbutton : ""}
+          {display ? selectbutton : ''}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import CardSelect from "../track/CardSelect";
+import React from 'react';
+import CardSelect from '../track/CardSelect';
 
 const ModalPlaylist = ({ playlist, event }) => {
   const listplaylist = playlist.map((v) => (
@@ -25,7 +26,8 @@ const ModalPlaylist = ({ playlist, event }) => {
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
-            ></button>
+              aria-label="event"
+            />
           </div>
           <div className="modal-body">
             <div className="row">
