@@ -1,10 +1,10 @@
 import { React, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CardPlaylist from '../components/molecule/playlist/CardPlaylist';
-import ModalPlaylist from '../components/molecule/playlist/ModalPlaylist';
-import Navbar from '../components/Navbar';
-import { setPlaylist } from '../store/Playlist';
-import { getPlaylistApi } from '../utils/api/playlistApi';
+import CardPlaylist from '../../components/molecule/playlist/CardPlaylist';
+import ModalPlaylist from '../../components/molecule/playlist/ModalPlaylist';
+import { setPlaylist } from '../../store/Playlist';
+import { getPlaylistApi } from '../../utils/api/playlistApi';
+import './Playlist.scss';
 
 const Playlist = () => {
   const token = useSelector((state) => state.Auth.token);
@@ -38,22 +38,17 @@ const Playlist = () => {
     getPlaylist();
   }, [token]);
   return (
-    <>
-      <Navbar />
-      <div>
-        <div className="container-fluid p-3">
-          <div className="row">
-            <div className="col-md-10">
-              <div className="row d-flex justify-content-center">
-                {playlistCard}
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <ModalPlaylist playlist={modaldata} event={setModalData} />
+    <div>
+      <div className="container-fluid p-3">
+        <div className="row-playlist">
+          {playlistCard}
+        </div>
       </div>
-    </>
+
+      <ModalPlaylist playlist={modaldata} event={setModalData} />
+    </div>
+
   );
 };
 

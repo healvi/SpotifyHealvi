@@ -10,28 +10,28 @@ const CardPlaylist = ({ data, event }) => {
     });
   };
   return (
-    <div className="col-md-4 col-12 ">
-      <div
-        className="card cardlist"
-        data-bs-toggle="modal"
-        data-bs-target="#modalplaylist"
-        onClick={() => requestItem()}
-        aria-hidden
-      >
-        <Img
-          data={
+
+    <div
+      className="card-playlist cardlist"
+      data-bs-toggle="modal"
+      data-bs-target="#modalplaylist"
+      onClick={() => requestItem()}
+      aria-hidden
+    >
+      <Img
+        data={
             data.images.length !== 0
               ? data.images[0].url
               : 'http://placeimg.com/640/640/tech'
           }
-        />
-        <div className="card-body">
-          <Title data={data.name} />
-          <Subtitle data={data.description} />
-          <Subtitle data={data.id} />
-        </div>
+      />
+      <div className="card-body-playlist">
+        <Title data={data.name} />
+        <Subtitle data={data.description} />
+        <Subtitle data={data.id} />
       </div>
     </div>
+
   );
 };
 

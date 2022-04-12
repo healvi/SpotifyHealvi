@@ -1,0 +1,33 @@
+.card-playlist {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    width: 18rem !important;
+    margin-right: 5px;
+    
+}
+
+.card-body-playlist {
+    flex: 1 1 auto;
+    padding: 1rem 1rem;
+}
+
+.row-playlist {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex !important;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+    justify-content: center !important;
+}
+
+

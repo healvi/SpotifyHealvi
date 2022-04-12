@@ -1,16 +1,16 @@
 import {
-  React, useState, useEffect, Fragment,
+  React, useState, useEffect,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import CardSelect from '../components/molecule/track/CardSelect';
-import Input from '../components/atoms/input';
-import ModalSelect from '../components/molecule/track/ModalSelect';
-import { setPlaylist } from '../store/Playlist';
-import { setSelectTrack, setTrack } from '../store/Tracks';
-import { getPlaylistApi, postItemPlaylistApi } from '../utils/api/playlistApi';
-import searchTrackApi from '../utils/api/searchTrackApi';
-import { urlGet } from '../utils/spotifyconf';
-import Navbar from '../components/Navbar';
+import './Track.scss';
+import CardSelect from '../../components/molecule/track/CardSelect';
+import Input from '../../components/atoms/input';
+import ModalSelect from '../../components/molecule/track/ModalSelect';
+import { setPlaylist } from '../../store/Playlist';
+import { setSelectTrack, setTrack } from '../../store/Tracks';
+import { getPlaylistApi, postItemPlaylistApi } from '../../utils/api/playlistApi';
+import searchTrackApi from '../../utils/api/searchTrackApi';
+import { urlGet } from '../../utils/spotifyconf';
 
 const SpotifyUseE = () => {
   const dispatch = useDispatch();
@@ -110,23 +110,17 @@ const SpotifyUseE = () => {
   );
 
   return (
-    <>
-      <Navbar />
-      <div>
-        <div className="container-fluid p-3">
-          <div className="row">
-            <div className="col-md-3">
-              <div className="d-grid gap-2">{searchData}</div>
-            </div>
-            <div className="col-md-9">
-              <div className="row">{getTrack}</div>
-            </div>
-          </div>
+    <div>
+      <div className="container-fluid p-3">
+        <div className="grid-container">
+          <div className="">{searchData}</div>
+          <div className="grid-card">{getTrack}</div>
         </div>
-
-        <ModalSelect select={handleSelect} data={modalData} />
       </div>
-    </>
+
+      <ModalSelect select={handleSelect} data={modalData} />
+    </div>
+
   );
 };
 

@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import Navbar from '../components/Navbar';
 import { postNewPlaylistApi } from '../utils/api/playlistApi';
-import { urlGet } from '../utils/spotifyconf';
 
 const CreatePlaylist = () => {
   const token = useSelector((state) => state.Auth.token);
@@ -35,7 +33,7 @@ const CreatePlaylist = () => {
     }
   };
 
-  const inputPlaylist = token ? (
+  const inputPlaylist = (
     <div className="mt-3">
       <h3>Input Playlist Form</h3>
       <form onSubmit={handleSubmit} className="mt-3">
@@ -97,26 +95,19 @@ const CreatePlaylist = () => {
         </button>
       </form>
     </div>
-  ) : (
-    <div className="d-grid gap-2 mt-2">
-      <a href={urlGet} className="btn btn-danger">
-        Anda Belum Login
-      </a>
-    </div>
   );
 
   return (
-    <>
-      <Navbar />
-      <div>
-        <div className="container-fluid p-3">
-          <div className="row">
-            <div className="col-md-3">{inputPlaylist}</div>
-            <div className="col-md-9" />
-          </div>
+
+    <div>
+      <div className="container-fluid p-3">
+        <div className="row">
+          <div className="col-md-3">{inputPlaylist}</div>
+          <div className="col-md-9" />
         </div>
       </div>
-    </>
+    </div>
+
   );
 };
 

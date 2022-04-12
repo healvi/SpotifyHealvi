@@ -18,22 +18,21 @@ const CardSelect = ({
     <ButtonSelect name="Select" data={data} />
   );
   return (
-    <div className="col-md-4 col-12">
-      <div className="card">
-        <Img
-          data={
+    <div className="card-track">
+      <Img
+        data={
             data.album.images.length !== 0
               ? data.album.images[0].url
               : 'http://placeimg.com/640/640/nature'
           }
-        />
-        <div className="card-body">
-          <Title data={data.album.name} />
-          <Subtitle data={data.artists[0].name} />
-          {display ? selectbutton : ''}
-        </div>
+      />
+      <div className="card-body-track">
+        <Title data={data.album.name} />
+        <Subtitle data={data.artists[0].name} />
+        {display ? selectbutton : ''}
       </div>
     </div>
+
   );
 };
 
