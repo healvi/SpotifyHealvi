@@ -4,18 +4,19 @@ import { Subtitle, Title } from '../../atoms/text';
 import ButtonSelect from './ButtonSelect';
 
 const CardSelect = ({
-  data, isSelect, display = true, select,
+  data, isSelect, display = true, select, openModal,
 }) => {
   const selectbutton = isSelect ? (
     <ButtonSelect
       isSelect={isSelect}
       name="Deselect"
-      color="success"
+      color="green"
       data={data}
       select={select}
+      openModal={openModal}
     />
   ) : (
-    <ButtonSelect name="Select" data={data} />
+    <ButtonSelect name="Select" data={data} color="blue" openModal={openModal} />
   );
   return (
     <div className="card-track">

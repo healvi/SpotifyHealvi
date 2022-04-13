@@ -1,7 +1,10 @@
 import React from 'react';
+import {
+  Input as Inputan,
+} from '@chakra-ui/input';
 
 const Input = ({ get }) => (
-  <input
+  <Inputan
     onChange={(e) => get(e.target.value)}
     type="text"
     className="form-control"

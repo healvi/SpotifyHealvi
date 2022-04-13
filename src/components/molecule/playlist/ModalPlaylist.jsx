@@ -3,7 +3,7 @@ import CardSelect from '../track/CardSelect';
 
 const ModalPlaylist = ({ playlist, event }) => {
   const listplaylist = playlist.map((v) => (
-    <div className="col-md-4 text-center p-3" key={v.id}>
+    <div className="col-md-4 text-center p-3" key={v.added_at}>
       <CardSelect data={v.track} display={false} />
     </div>
   ));

@@ -1,33 +1,42 @@
+/* eslint-disable no-unused-vars */
+import { Button, useDisclosure } from '@chakra-ui/react';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setModalTrack } from '../../../store/Tracks';
 
 const ButtonSelect = ({
-  isSelect, name, color = 'primary', data, select,
+  isSelect, name, color = 'primary', data, select, openModal,
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   return isSelect ? (
-    <button
+    <Button
+      mt="3"
+      colorScheme={`${color}`}
+      variant="solid"
       onClick={() => {
+        openModal();
         select(data, []);
       }}
       type="button"
-      className={`btn btn-${color} mt-3 `}
+
     >
       {name}
-    </button>
+    </Button>
   ) : (
-    <button
+    <Button
+      mt="3"
+      colorScheme={`${color}`}
+      variant="solid"
       onClick={() => {
+        openModal();
         dispatch(setModalTrack(data));
       }}
       type="button"
-      className={`btn btn-${color} mt-3 `}
-      data-bs-toggle="modal"
-      data-bs-target="#modalselect"
+      className="btn"
     >
       {name}
-    </button>
+    </Button>
   );
 };
 

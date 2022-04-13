@@ -3,17 +3,21 @@ import {
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Track.scss';
+import {
+  Box, Container, Grid, GridItem, Text, useDisclosure,
+} from '@chakra-ui/react';
 import CardSelect from '../../components/molecule/track/CardSelect';
 import Input from '../../components/atoms/input';
-import ModalSelect from '../../components/molecule/track/ModalSelect';
 import { setPlaylist } from '../../store/Playlist';
 import { setSelectTrack, setTrack } from '../../store/Tracks';
 import { getPlaylistApi, postItemPlaylistApi } from '../../utils/api/playlistApi';
 import searchTrackApi from '../../utils/api/searchTrackApi';
 import { urlGet } from '../../utils/spotifyconf';
+import ModalSelectCUI from '../../components/molecule/track/ModalSelectCUI';
 
-const SpotifyUseE = () => {
+const Tracks = () => {
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const token = useSelector((state) => state.Auth.token);
   const data = useSelector((state) => state.Track.tracks);
   const modalData = useSelector((state) => state.Track.modalTrack);
@@ -56,10 +60,11 @@ const SpotifyUseE = () => {
       dispatch(setSelectTrack(select.filter((sele) => sele.uri !== track.uri)));
     } else {
       try {
-        postItemPlaylistApi(playlist[0].id, track.uri).then(() => {
+        await postItemPlaylistApi(playlist[0].id, track.uri).then(() => {
           alert(`Berhasil insert Ke Playlist ${playlist[0].name}`);
           dispatch(setSelectTrack([...select, track]));
         });
+        onClose();
       } catch (error) {
         console.log(error);
       }
@@ -91,37 +96,43 @@ const SpotifyUseE = () => {
             isSelect={track.isSelected}
             display
             select={handleSelect}
+            openModal={onOpen}
           />
         );
       }
       return (
-        <CardSelect
-          key={track.id}
-          data={track}
-          display
-          select={handleSelect}
-        />
+        <GridItem w="100%" key={track.id}>
+          <CardSelect
+            data={track}
+            display
+            select={handleSelect}
+            openModal={onOpen}
+          />
+        </GridItem>
       );
     })
   ) : (
-    <div className="container d-flex justify-content-center align-content-center">
-      <h1>Empty</h1>
-    </div>
+    <Box display="flex" alignItems="center" justifyContent="space-between">
+      <Text fontSize="xl">Empty</Text>
+    </Box>
+
   );
 
   return (
     <div>
-      <div className="container-fluid p-3">
-        <div className="grid-container">
+      <Container maxW="container.xl" bg="white.400" color="#262626" pt="3">
+        <Grid templateColumns="repeat(2)" gap={6}>
           <div className="">{searchData}</div>
-          <div className="grid-card">{getTrack}</div>
-        </div>
-      </div>
+          <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+            {getTrack}
+          </Grid>
 
-      <ModalSelect select={handleSelect} data={modalData} />
+        </Grid>
+      </Container>
+      <ModalSelectCUI select={handleSelect} data={modalData} isOpen={isOpen} onClose={onClose} />
     </div>
 
   );
 };
 
-export default SpotifyUseE;
+export default Tracks;

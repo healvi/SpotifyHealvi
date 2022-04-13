@@ -1,6 +1,10 @@
+import {
+  Box,
+  Container, Grid, GridItem, Text,
+} from '@chakra-ui/react';
 import { React, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CardPlaylist from '../../components/molecule/playlist/CardPlaylist';
+import CardPlaylistCUI from '../../components/molecule/playlist/CardPlaylistCUI';
 import ModalPlaylist from '../../components/molecule/playlist/ModalPlaylist';
 import { setPlaylist } from '../../store/Playlist';
 import { getPlaylistApi } from '../../utils/api/playlistApi';
@@ -22,30 +26,31 @@ const Playlist = () => {
   };
   const playlistCard = datas.length > 0 ? (
     datas.map((playlist) => (
-      <CardPlaylist
-        key={playlist.id}
-        data={playlist}
-        event={setModalData}
-        token={token}
-      />
+      <GridItem w="100%" key={playlist.id}>
+        <CardPlaylistCUI
+          data={playlist}
+          event={setModalData}
+          token={token}
+        />
+      </GridItem>
     ))
   ) : (
-    <div className="container d-flex justify-content-center align-content-center">
-      <h1>Empty</h1>
-    </div>
+    <Box display="flex" alignItems="center" justifyContent="space-between">
+      <Text fontSize="xl">Empty</Text>
+    </Box>
   );
   useEffect(() => {
     getPlaylist();
-  }, [token]);
+  }, []);
   return (
 
     <div>
-      <div className="container-fluid p-3">
-        <div className="row-playlist">
+      <Container maxW="container.xl" bg="white.400" color="#262626" pt="3">
+        <Text fontSize="4xl">Your Playlist</Text>
+        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
           {playlistCard}
-        </div>
-      </div>
-
+        </Grid>
+      </Container>
       <ModalPlaylist playlist={modaldata} event={setModalData} />
     </div>
 

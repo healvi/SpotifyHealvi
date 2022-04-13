@@ -1,4 +1,5 @@
 import { React, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import './App.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { setToken } from './store/Auth';
@@ -6,7 +7,6 @@ import { setUser } from './store/User';
 import { authGenerate, isAuth } from './utils/OAuth';
 import { deleteStorage, setStorage } from './utils/storage';
 import getUserApi from './utils/api/userApi';
-import { urlGet } from './utils/spotifyconf';
 import Routes from './routes/routes';
 
 const App = () => {
@@ -20,6 +20,7 @@ const App = () => {
       dispatch(setToken(token));
     } catch (error) {
       deleteStorage();
+      Redirect('/login');
     }
   };
   const setMeProfile = async () => {
@@ -35,6 +36,7 @@ const App = () => {
     } catch (error) {
       console.log('error');
       deleteStorage();
+      Redirect('/login');
     }
   };
 
@@ -47,15 +49,9 @@ const App = () => {
 
   return (
     <div className="App">
-      {isAuth ? (
-        <Routes />
-      ) : (
-        <div className="container d-flex justify-content-center align-items-center vh-100">
-          <a href={urlGet} className="btn btn-danger">
-            Anda Belum Login, Klik Untuk Login
-          </a>
-        </div>
-      )}
+
+      <Routes />
+
     </div>
   );
 };
