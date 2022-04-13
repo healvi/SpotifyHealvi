@@ -7,7 +7,7 @@ import {
 import { getTrackPlaylistApi } from '../../../utils/api/playlistApi';
 import Img from '../../atoms/img';
 
-const CardPlaylistCUI = ({ data, event }) => {
+const CardPlaylistCUI = ({ data, event, onOpen }) => {
   const requestItem = async () => {
     getTrackPlaylistApi(data.tracks.href).then((response) => {
       event(response.data.items);
@@ -23,7 +23,10 @@ const CardPlaylistCUI = ({ data, event }) => {
       justifyContent="center"
       data-bs-toggle="modal"
       data-bs-target="#modalplaylist"
-      onClick={() => requestItem()}
+      onClick={() => {
+        onOpen();
+        requestItem();
+      }}
     >
       <Box
         bg={useColorModeValue('white', 'gray.800')}

@@ -25,7 +25,7 @@ const ModalSelectCUI = ({
   const playlist = useSelector((state) => state.Playlist.playlist);
   const [choseplaylist, setPlaylist] = useState([]);
   const listplaylist = playlist.map((v) => (
-    <GridItem w="100%" key={v.id} mr="12">
+    <GridItem w="100%" mr="12" key={v.id}>
       <CardPlaylistCUI data={v} />
       <input
         onChange={() => setPlaylist([v])}

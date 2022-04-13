@@ -21,9 +21,9 @@ const ModalPlaylistCUI = ({
   playlist, event, isOpen, onClose,
 }) => {
   const listplaylist = playlist.map((v) => (
-    <div className="col-md-4 text-center p-3" key={v.added_at}>
+    <GridItem w="100%" mr="12" key={v.added_at}>
       <CardSelect data={v.track} display={false} />
-    </div>
+    </GridItem>
   ));
   return (
     <Modal size="full" isOpen={isOpen} onClose={onClose}>
@@ -48,7 +48,6 @@ const ModalPlaylistCUI = ({
           >
             Close
           </Button>
-
         </ModalFooter>
       </ModalContent>
     </Modal>

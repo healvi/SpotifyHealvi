@@ -1,16 +1,17 @@
 import {
   Box,
-  Container, Grid, GridItem, Text,
+  Container, Grid, GridItem, Text, useDisclosure,
 } from '@chakra-ui/react';
 import { React, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CardPlaylistCUI from '../../components/molecule/playlist/CardPlaylistCUI';
-import ModalPlaylist from '../../components/molecule/playlist/ModalPlaylist';
+import ModalPlaylistCUI from '../../components/molecule/playlist/ModalPlaylistCUI';
 import { setPlaylist } from '../../store/Playlist';
 import { getPlaylistApi } from '../../utils/api/playlistApi';
 import './Playlist.scss';
 
 const Playlist = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const token = useSelector((state) => state.Auth.token);
   const datas = useSelector((state) => state.Playlist.playlist);
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const Playlist = () => {
           data={playlist}
           event={setModalData}
           token={token}
+          onOpen={onOpen}
         />
       </GridItem>
     ))
@@ -51,7 +53,7 @@ const Playlist = () => {
           {playlistCard}
         </Grid>
       </Container>
-      <ModalPlaylist playlist={modaldata} event={setModalData} />
+      <ModalPlaylistCUI playlist={modaldata} event={setModalData} isOpen={isOpen} onClose={onClose} />
     </div>
 
   );
