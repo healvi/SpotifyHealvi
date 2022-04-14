@@ -1,13 +1,10 @@
 import React from 'react';
-import {
-  Flex,
-  Box,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, Box, useColorModeValue } from '@chakra-ui/react';
 import { getTrackPlaylistApi } from '../../../utils/api/playlistApi';
 import Img from '../../atoms/img';
+import { playlistItem } from '../../../interface/PlaylistData';
 
-const CardPlaylistCUI = ({ data, event, onOpen }) => {
+const CardPlaylistCUI = ({ data, event, onOpen }: playlistItem) => {
   const requestItem = async () => {
     getTrackPlaylistApi(data.tracks.href).then((response) => {
       event(response.data.items);
@@ -36,21 +33,17 @@ const CardPlaylistCUI = ({ data, event, onOpen }) => {
         shadow="lg"
         position="relative"
       >
-
-        <Img data={data.images.length !== 0
-          ? data.images[0].url
-          : 'http://placeimg.com/640/640/tech'}
+        <Img
+          data={
+            data.images.length !== 0
+              ? data.images[0].url
+              : 'http://placeimg.com/640/640/tech'
+          }
         />
 
         <Box p="6" pb="1">
           <Flex mt="1" justifyContent="space-between" alignContent="center">
-            <Box
-              fontSize="xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-
-            >
+            <Box fontSize="xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {data.name}
             </Box>
           </Flex>

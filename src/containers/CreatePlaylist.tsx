@@ -1,27 +1,24 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Textarea, Button } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
-import {
-  Input,
-  InputGroup,
-  InputRightElement,
-} from '@chakra-ui/input';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { CheckIcon, WarningTwoIcon } from '@chakra-ui/icons';
 import { postNewPlaylistApi } from '../utils/api/playlistApi';
+import { useAppSelector } from '../app/hooks';
 
 const CreatePlaylist = () => {
-  const token = useSelector((state) => state.Auth.token);
-  const me = useSelector((state) => state.User.user);
+  const token = useAppSelector((state) => state.Auth.token);
+  const me = useAppSelector((state) => state.User.user);
   const [playlist, setFromPlayList] = useState({
     title: '',
     describe: '',
   });
-  const handleForm = (e) => {
+  const handleForm = (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFromPlayList({ ...playlist, [name]: value });
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (token) {
       const data = {
@@ -39,11 +36,14 @@ const CreatePlaylist = () => {
       }
     }
   };
-  const validation = playlist.title.length >= 10
-    ? <CheckIcon color="green.500" />
-    : playlist.title !== ''
-      ? <WarningTwoIcon color="red.500" />
-      : '';
+  const validation =
+    playlist.title.length >= 10 ? (
+      <CheckIcon color="green.500" />
+    ) : playlist.title !== '' ? (
+      <WarningTwoIcon color="red.500" />
+    ) : (
+      ''
+    );
   const inputPlaylist = (
     <div className="mt-3">
       <h3>Input Playlist Form</h3>
@@ -63,22 +63,17 @@ const CreatePlaylist = () => {
                 playlist.title.length >= 10
                   ? 'is-valid'
                   : playlist.title !== ''
-                    ? 'is-invalid'
-                    : ''
+                  ? 'is-invalid'
+                  : ''
               }`}
             />
-            <InputRightElement>
-              {validation}
-            </InputRightElement>
+            <InputRightElement>{validation}</InputRightElement>
           </InputGroup>
-          <div id="titleplauhelp" className="form-text" minLength="10">
+          <div id="titleplauhelp" className="form-text">
             Minimum 10 Character
           </div>
           <div className="valid-feedback">Looks good!</div>
-          <div
-            id="titleplauhelp"
-            className="invalid-feedback"
-          >
+          <div id="titleplauhelp" className="invalid-feedback">
             Character kurang dari 10
           </div>
         </div>
@@ -86,8 +81,12 @@ const CreatePlaylist = () => {
           <label htmlFor="descplaylist" className="form-label">
             Description
           </label>
-          <Textarea name="describe" value={playlist.describe} onChange={handleForm} isRequired />
-
+          <Textarea
+            name="describe"
+            value={playlist.describe}
+            onChange={handleForm}
+            isRequired
+          />
         </div>
         <Button
           colorScheme="blue"
@@ -97,7 +96,6 @@ const CreatePlaylist = () => {
           }
         >
           Submit
-
         </Button>
       </form>
     </div>

@@ -1,17 +1,18 @@
-import { React, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import React from 'react';
+import { useEffect } from 'react';
 import './App.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setToken } from './store/Auth';
 import { setUser } from './store/User';
 import { authGenerate, isAuth } from './utils/OAuth';
 import { deleteStorage, setStorage } from './utils/storage';
 import getUserApi from './utils/api/userApi';
 import Routes from './routes/routes';
+import { useAppSelector } from './app/hooks';
 
 const App = () => {
   const dispatch = useDispatch();
-  const tokens = useSelector((state) => state.Auth.token);
+  const tokens = useAppSelector((state) => state.Auth.token);
 
   const setTokena = () => {
     try {
@@ -20,7 +21,7 @@ const App = () => {
       dispatch(setToken(token));
     } catch (error) {
       deleteStorage();
-      Redirect('/login');
+      // Redirect('/login');
     }
   };
   const setMeProfile = async () => {
@@ -36,22 +37,20 @@ const App = () => {
     } catch (error) {
       console.log('error');
       deleteStorage();
-      Redirect('/login');
+      // Redirect('/login');
     }
   };
 
   useEffect(() => {
     setTokena();
     if (isAuth) {
-      setMeProfile(tokens);
+      setMeProfile();
     }
   }, []);
 
   return (
     <div className="App">
-
       <Routes />
-
     </div>
   );
 };

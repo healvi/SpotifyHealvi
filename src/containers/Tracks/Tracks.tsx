@@ -1,30 +1,40 @@
-import {
-  React, useState, useEffect,
-} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import './Track.scss';
 import {
-  Box, Container, Grid, GridItem, Text, useDisclosure,
+  Box,
+  Container,
+  Grid,
+  GridItem,
+  Text,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { Redirect } from 'react-router-dom';
 import CardSelect from '../../components/molecule/track/CardSelect';
 import Input from '../../components/atoms/input';
 import { setPlaylist } from '../../store/Playlist';
 import { setSelectTrack, setTrack } from '../../store/Tracks';
-import { getPlaylistApi, postItemPlaylistApi } from '../../utils/api/playlistApi';
+import {
+  getPlaylistApi,
+  postItemPlaylistApi,
+} from '../../utils/api/playlistApi';
 import searchTrackApi from '../../utils/api/searchTrackApi';
 import { urlGet } from '../../utils/spotifyconf';
 import ModalSelectCUI from '../../components/molecule/track/ModalSelectCUI';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Track } from '../../interface/TrackData';
+import { Playlist } from '../../interface/PlaylistData';
 
 const Tracks = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const token = useSelector((state) => state.Auth.token);
-  const data = useSelector((state) => state.Track.tracks);
-  const modalData = useSelector((state) => state.Track.modalTrack);
-  const select = useSelector((state) => state.Track.selectTrack);
+  const token = useAppSelector((state) => state.Auth.token);
+  const data = useAppSelector((state) => state.Track.tracks);
+  const modalData = useAppSelector((state) => state.Track.modalTrack);
+  const select = useAppSelector((state) => state.Track.selectTrack);
   const [query, setQuery] = useState('');
 
-  const combineData = (datas) => {
+  const combineData = (datas: Track[]) => {
     const combine = datas.map((track) => ({
       ...track,
       isSelected: select.find((sele) => sele.uri === track.uri),
@@ -51,17 +61,20 @@ const Tracks = () => {
       dispatch(setPlaylist(data.items));
     } catch (error) {
       console.log(error);
+      // Redirect('/login');
     }
   };
 
-  const handleSelect = async (track, playlist) => {
-    const selected = select.find((sele) => sele.uri === track.uri);
+  const handleSelect = async (track?: Track, playlist?: Playlist[]) => {
+    const selected = select.find((sele) => sele.uri === track?.uri);
     if (selected) {
-      dispatch(setSelectTrack(select.filter((sele) => sele.uri !== track.uri)));
+      dispatch(
+        setSelectTrack(select.filter((sele) => sele.uri !== track?.uri))
+      );
     } else {
       try {
-        await postItemPlaylistApi(playlist[0].id, track.uri).then(() => {
-          alert(`Berhasil insert Ke Playlist ${playlist[0].name}`);
+        await postItemPlaylistApi(playlist![0].id, track?.uri).then(() => {
+          alert(`Berhasil insert Ke Playlist ${playlist![0].name}`);
           dispatch(setSelectTrack([...select, track]));
         });
         onClose();
@@ -86,37 +99,37 @@ const Tracks = () => {
     </a>
   );
 
-  const getTrack = data.length > 0 ? (
-    data.map((track) => {
-      if (select.length > 0) {
+  const getTrack =
+    data.length > 0 ? (
+      data.map((track) => {
+        if (select.length > 0) {
+          return (
+            <CardSelect
+              key={track.id}
+              data={track}
+              isSelect={track.isSelected}
+              display
+              select={handleSelect}
+              openModal={onOpen}
+            />
+          );
+        }
         return (
-          <CardSelect
-            key={track.id}
-            data={track}
-            isSelect={track.isSelected}
-            display
-            select={handleSelect}
-            openModal={onOpen}
-          />
+          <GridItem w="100%" key={track.id}>
+            <CardSelect
+              data={track}
+              display
+              select={handleSelect}
+              openModal={onOpen}
+            />
+          </GridItem>
         );
-      }
-      return (
-        <GridItem w="100%" key={track.id}>
-          <CardSelect
-            data={track}
-            display
-            select={handleSelect}
-            openModal={onOpen}
-          />
-        </GridItem>
-      );
-    })
-  ) : (
-    <Box display="flex" alignItems="center" justifyContent="space-between">
-      <Text fontSize="xl">Empty</Text>
-    </Box>
-
-  );
+      })
+    ) : (
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Text fontSize="xl">Empty</Text>
+      </Box>
+    );
 
   return (
     <div>
@@ -126,12 +139,15 @@ const Tracks = () => {
           <Grid templateColumns="repeat(4, 1fr)" gap={6}>
             {getTrack}
           </Grid>
-
         </Grid>
       </Container>
-      <ModalSelectCUI select={handleSelect} data={modalData} isOpen={isOpen} onClose={onClose} />
+      <ModalSelectCUI
+        select={handleSelect}
+        data={modalData}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </div>
-
   );
 };
 

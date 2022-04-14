@@ -1,12 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../app/store';
+import { Track } from '../interface/TrackData';
+
+interface UserState {
+  tracks : Track[],
+  modalTrack: Track,
+  selectTrack: Track[],
+  }
+  
+  const initialState: UserState = {
+    tracks : [],
+    modalTrack: {} as Track,
+    selectTrack: [] ,
+  }
 
 export const track = createSlice({
   name: 'track',
-  initialState: {
-    tracks: [],
-    modalTrack: {},
-    selectTrack: [],
-  },
+  initialState,
   reducers: {
     setTrack: (state, action) => {
       state.tracks = action.payload;
@@ -21,6 +31,6 @@ export const track = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setTrack, setModalTrack, setSelectTrack } = track.actions;
-
+export const { setTrack, setModalTrack, setSelectTrack} = track.actions;
+export const tracks = (state: RootState) => state.Track.tracks
 export default track.reducer;

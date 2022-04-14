@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -8,9 +7,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Box,
   Button,
-  useDisclosure,
   Grid,
   GridItem,
   Container,
@@ -29,7 +26,7 @@ const ModalPlaylistCUI = ({
     <Modal size="full" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
+        <ModalHeader>Track In Playlist</ModalHeader>
         <ModalCloseButton />
         <ModalBody p="10" />
         <Container maxW="container.xl" bg="white.400" color="#262626" pt="3">

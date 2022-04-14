@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import { urlGet } from '../utils/spotifyconf';
 
 const Login = () => (
