@@ -1,56 +1,48 @@
 import React from 'react';
 import { useEffect } from 'react';
 import './App.scss';
-import { setToken } from './store/Auth';
+import { setAuth, setToken } from './store/Auth';
 import { setUser } from './store/User';
-import { authGenerate, isAuth } from './utils/OAuth';
-import { deleteStorage, setStorage } from './utils/storage';
+import { deleteStorage } from './utils/storage';
 import getUserApi from './utils/api/userApi';
 import Routes from './routes/routes';
-import { useAppSelector, useAppDispatch } from './app/hooks';
+import { useAppDispatch } from './app/hooks';
+import { setTokena } from './utils/StartApp';
+import { getPlaylistApi } from './utils/api/playlistApi';
+import { setPlaylist } from './store/Playlist';
+import { Box } from '@chakra-ui/react';
 
-const App = () => {
+export const App = () => {
   const dispatch = useAppDispatch();
-  const tokens = useAppSelector((state) => state.Auth.token);
-
-  const setTokena = () => {
-    try {
-      const { token } = authGenerate();
-      setStorage('token', token);
-      dispatch(setToken(token));
-    } catch (error) {
-      deleteStorage();
-      // Redirect('/login');
-    }
-  };
-  const setMeProfile = async () => {
+  const StartApplikasi = async () => {
+    const token = setTokena();
+    dispatch(setToken(token));
+    dispatch(setAuth(true));
     try {
       await getUserApi()
-        .then((response) => {
+        .then(async (response) => {
           dispatch(setUser(response.data));
+          const { data } = await getPlaylistApi();
+          dispatch(setPlaylist(data.items));
         })
         .catch(() => {
           deleteStorage();
           dispatch(setToken(''));
+          dispatch(setAuth(false));
         });
     } catch (error) {
-      console.log('error');
-      deleteStorage();
-      // Redirect('/login');
+      window.location.replace('/login');
     }
   };
 
   useEffect(() => {
-    setTokena();
-    if (isAuth) {
-      setMeProfile();
-    }
+    StartApplikasi();
   }, []);
 
   return (
-    <div className="App" data-testid="home-app">
+    <Box maxW="full">
       <Routes />
-    </div>
+    </Box>
   );
 };
 

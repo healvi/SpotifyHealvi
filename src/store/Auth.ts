@@ -2,11 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 
 interface AuthState {
-  token : string
+  token : string,
+  isAuth : boolean
 }
 
 const initialState: AuthState = {
-  token: ''
+  token: '',
+  isAuth : false
 }
 
 export const Auths = createSlice({
@@ -16,11 +18,14 @@ export const Auths = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    setAuth: (state, action) => {
+      state.isAuth = action.payload;
+    },
   },
 
 });
 
 // Action creators are generated for each case reducer function
-export const { setToken } = Auths.actions;
+export const { setToken, setAuth } = Auths.actions;
 export const auths = (state: RootState) => state.Auth.token
 export default Auths.reducer;
