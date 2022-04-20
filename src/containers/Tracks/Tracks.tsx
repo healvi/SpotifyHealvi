@@ -9,7 +9,6 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Redirect } from 'react-router-dom';
 import CardSelect from '../../components/molecule/track/CardSelect';
 import Input from '../../components/atoms/input';
 import { setPlaylist } from '../../store/Playlist';
@@ -133,8 +132,14 @@ const Tracks = () => {
 
   return (
     <div>
-      <Container maxW="container.xl" bg="white.400" color="#262626" pt="3">
-        <Grid templateColumns="repeat(2)" gap={6}>
+      <Container
+        data-testid="home-track"
+        maxW="container.xl"
+        bg="white.400"
+        color="#262626"
+        pt="3"
+      >
+        <Grid templateColumns="repeat(2)" gap={6} data-testid="grid-track">
           <div className="">{searchData}</div>
           <Grid templateColumns="repeat(4, 1fr)" gap={6}>
             {getTrack}

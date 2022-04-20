@@ -1,17 +1,16 @@
 import React from 'react';
 import { useEffect } from 'react';
 import './App.scss';
-import { useDispatch } from 'react-redux';
 import { setToken } from './store/Auth';
 import { setUser } from './store/User';
 import { authGenerate, isAuth } from './utils/OAuth';
 import { deleteStorage, setStorage } from './utils/storage';
 import getUserApi from './utils/api/userApi';
 import Routes from './routes/routes';
-import { useAppSelector } from './app/hooks';
+import { useAppSelector, useAppDispatch } from './app/hooks';
 
 const App = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const tokens = useAppSelector((state) => state.Auth.token);
 
   const setTokena = () => {
@@ -49,7 +48,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" data-testid="home-app">
       <Routes />
     </div>
   );
