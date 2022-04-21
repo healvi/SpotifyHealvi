@@ -1,4 +1,3 @@
-import { Track } from "./TrackData"
 
 export interface AllPlaylist {
     href: string,
@@ -11,7 +10,6 @@ export interface AllPlaylist {
   }
 
   export interface Playlist {
-    
         collaborative: boolean,
         description: string,
         external_urls: {
@@ -49,8 +47,5 @@ export interface AllPlaylist {
     width: number
   }
 
-  export interface playlistItem  {
-    data : Playlist,
-    event : (data : any) => void
-    onOpen : () => void
-  }
+
+

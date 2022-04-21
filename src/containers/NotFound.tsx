@@ -1,9 +1,47 @@
-import React from 'react';
+import React from "react";
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  Center,
+  Container,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
-const NotFound = () => (
-  <div className="container d-flex justify-content-center align-items-center vh-100">
-    <h1>404 Not Found</h1>
-  </div>
-);
+export default function NotFound() {
+  const navigate = useNavigate();
+  return (
+    <Container height="100%">
+      <Center>
+        <Box textAlign="center" py={10} px={6}>
+          <Heading
+            display="inline-block"
+            as="h2"
+            size="2xl"
+            bgGradient="linear(to-r, teal.400, teal.600)"
+            backgroundClip="text"
+          >
+            404
+          </Heading>
+          <Text fontSize="18px" mt={3} mb={2}>
+            Page Not Found
+          </Text>
+          <Text color={"gray.500"} mb={6}>
+            The page you are looking for does not seem to exist
+          </Text>
 
-export default NotFound;
+          <Button
+            colorScheme="teal"
+            bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
+            color="white"
+            onClick={() => navigate("/")}
+            variant="solid"
+          >
+            Go to Home
+          </Button>
+        </Box>
+      </Center>
+    </Container>
+  );
+}

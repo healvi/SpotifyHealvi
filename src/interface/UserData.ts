@@ -1,5 +1,5 @@
 export interface User {
-    country: string,
+  country: string,
     display_name: string,
     email: string,
     explicit_content: {
@@ -15,8 +15,14 @@ export interface User {
     },
     href: string,
     id: string,
-    images: [],
+    images: UserImages[],
     product: string,
     type: string,
     uri: string
+  }
+
+  export interface UserImages {
+    height: number,
+    url: string
+    width: number
   }

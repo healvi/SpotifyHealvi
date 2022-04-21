@@ -8,18 +8,19 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Grid,
   GridItem,
   Container,
+  SimpleGrid,
 } from '@chakra-ui/react';
-import CardSelect from '../track/CardSelect';
+import CardTrack from '../track/CardTrack';
+
 
 const ModalPlaylistCUI = ({
   playlist, event, isOpen, onClose,
 }) => {
   const listplaylist = playlist.map((v) => (
     <GridItem w="100%" mr="12" key={v.added_at}>
-      <CardSelect data={v.track} display={false} />
+      <CardTrack data={v.track} display={false} />
     </GridItem>
   ));
   return (
@@ -30,9 +31,9 @@ const ModalPlaylistCUI = ({
         <ModalCloseButton />
         <ModalBody p="10" />
         <Container maxW="container.xl" bg="white.400" color="#262626" pt="3">
-          <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+          <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
             {listplaylist}
-          </Grid>
+          </SimpleGrid>
         </Container>
         <ModalFooter>
           <Button

@@ -31,6 +31,8 @@
         "no-alert" : 0,
         "no-console" : 0,
         "no-shadow" : 0,
-        "max-len": 0
+        "max-len": 0,
+        "no-empty-pattern" : 0,
+        "ban-types" : "off"
     }
 }

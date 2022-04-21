@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-/tmpnodejsnpm-cache
+
 # production
 /build
 .env
