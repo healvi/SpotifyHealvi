@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
-import './index.scss';
 import { ChakraProvider } from '@chakra-ui/react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './index.scss';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
+import ReactDOM from 'react-dom';
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
@@ -15,7 +15,6 @@ ReactDOM.render(
         <App />
       </Provider>
     </ChakraProvider>
-    ,
   </React.StrictMode>,
   document.getElementById('root')
 );

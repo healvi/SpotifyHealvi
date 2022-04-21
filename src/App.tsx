@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import './App.scss';
 import { setAuth, setToken } from './store/Auth';
 import { setUser } from './store/User';
-import { deleteStorage } from './utils/storage';
+import { deleteStorage, getStorage } from './utils/storage';
 import getUserApi from './utils/api/userApi';
 import Routes from './routes/routes';
 import { useAppDispatch } from './app/hooks';
@@ -14,6 +14,7 @@ import { Box } from '@chakra-ui/react';
 
 export const App = () => {
   const dispatch = useAppDispatch();
+  const isAuthStorage = !!getStorage('token');
   const StartApplikasi = async () => {
     const token = setTokena();
     dispatch(setToken(token));
@@ -36,7 +37,9 @@ export const App = () => {
   };
 
   useEffect(() => {
-    StartApplikasi();
+    if (isAuthStorage) {
+      StartApplikasi();
+    }
   }, []);
 
   return (
