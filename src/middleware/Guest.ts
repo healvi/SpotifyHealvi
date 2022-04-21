@@ -1,20 +1,20 @@
 import { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
 import { getStorage } from "../utils/storage";
 type Props = {
-  children: JSX.Element,
+  children: JSX.Element;
 };
-const Guest = ({  children }: Props) => {
-  const navigate = useNavigate()
+const Guest = ({ children }: Props) => {
+  const navigate = useNavigate();
+  const token = useAppSelector((state) => state.Auth.token);
   useEffect(() => {
-    if (getStorage('token') && getStorage('token') !== null) {
-      navigate("/")
-
+    if (getStorage("token") && token) {
+      navigate("/");
     }
-  }, [])
+  }, []);
 
   return children;
 };
-
 
 export default Guest;
