@@ -1,10 +1,12 @@
 import {
+  getPlaylistApi,
   postItemPlaylistApi,
   postNewPlaylistApi,
 } from "../../api/res/PlaylistApi";
 import { createPlaylistActionProps } from "../../interface/action";
 import { deleteStorage } from "../../utils/storage";
 import { clear } from "../Auth";
+import { setPlaylist } from "../Playlist";
 import { setSelectPlaylist } from "../Tracks";
 
 const createPlaylistAction =
@@ -21,10 +23,12 @@ const createPlaylistAction =
       .then(async (response) => {
         dispatch(setSelectPlaylist(response.data));
         await postItemPlaylistApi(response.data.id, select[0].uri)
-          .then(() => {
+          .then(async () => {
             setFromPlayList({ title: "", description: "" });
             setIsLoading(false);
             alert(`Anda Berhasil Membuat Playlist ${playlist.title}`);
+            const { data } = await getPlaylistApi();
+            dispatch(setPlaylist(data.items));
           })
           .catch((error) => {
             if (error.request.status === 401) {

@@ -5,18 +5,16 @@ import { setPlaylist } from "../Playlist";
 import { Playlist } from "../../interface/PlaylistData";
 
 export const playlistPageAction = () => async (dispatch: any) => {
-  async () => {
-    await getPlaylistApi()
-      .then((response) => {
-        dispatch(setPlaylist(response.data.items));
-      })
-      .catch((error) => {
-        if (error.request.status === 401) {
-          deleteStorage();
-          dispatch(clear());
-        }
-      });
-  };
+  await getPlaylistApi()
+    .then((response) => {
+      dispatch(setPlaylist(response.data.items));
+    })
+    .catch((error) => {
+      if (error.request.status === 401) {
+        deleteStorage();
+        dispatch(clear());
+      }
+    });
 };
 
 export const requestItemPlaylistAction =
