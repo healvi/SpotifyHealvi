@@ -1,13 +1,16 @@
 import { Center, Flex, SimpleGrid, Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteItemPlaylistApi } from "../../api/res/PlaylistApi";
 import SearchTrackApi from "../../api/res/SearchTrackApi";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CardSong from "../../components/atoms/createPlaylist/CardSong";
 import { Track } from "../../interface/SearchData";
+import {
+  combineDataAction,
+  handlesongaction,
+} from "../../store/actions/SearchSongAction";
 import { setAuth, setToken } from "../../store/Auth";
-import { setSelectSong, setSong } from "../../store/Tracks";
+import { setSelectSong } from "../../store/Tracks";
 import { deleteStorage } from "../../utils/storage";
 
 const SearchSong = () => {
@@ -17,36 +20,11 @@ const SearchSong = () => {
   const song = useAppSelector((state) => state.Track.song);
   const select = useAppSelector((state) => state.Track.selectSong);
   const playlist = useAppSelector((state) => state.Track.selectPlaylist);
-  const combineData = (datas: Track[]) => {
-    const combine = datas.map((track) => ({
-      ...track,
-      isSelected: select.find((sele) => sele.uri === track.uri),
-    }));
-    dispatch(setSong(combine));
-  };
 
   const handleSong = async (track?: Track) => {
     const selected = select.find((sele) => sele.uri === track?.uri);
     if (selected) {
-      await deleteItemPlaylistApi(playlist.id, track?.uri, playlist.snapshot_id)
-        .then(() => {
-          alert(`Berhasil DELETE dari Playlist ${playlist.name}`);
-          dispatch(
-            setSelectSong(select.filter((sele) => sele.uri !== track?.uri))
-          );
-        })
-        .catch((error) => {
-          if (error.request.status === 401) {
-            deleteStorage();
-            dispatch(setToken(""));
-            dispatch(setAuth(false));
-            navigate("/login");
-          } else if (error.request.status === 404) {
-            dispatch(
-              setSelectSong(select.filter((sele) => sele.uri !== track?.uri))
-            );
-          }
-        });
+      dispatch(handlesongaction(select, track, playlist));
     } else {
       dispatch(setSelectSong([...select, track]));
     }
@@ -62,7 +40,7 @@ const SearchSong = () => {
       };
       SearchTrackApi(params)
         .then((response) => {
-          combineData(response.data.tracks.items);
+          dispatch(combineDataAction(response.data.tracks.items, select));
         })
         .catch((error) => {
           if (error.request.status === 401) {

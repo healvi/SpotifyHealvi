@@ -9,34 +9,16 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getPlaylistApi } from "../../api/res/PlaylistApi";
-import { setPlaylist } from "../../store/Playlist";
 import ModalPlaylistCUI from "../../components/molecule/playlist/ModalPlaylistCUI";
 import CardPlaylistCUI from "../../components/molecule/playlist/CardPlaylistCUI";
-import { deleteStorage } from "../../utils/storage";
-import { setAuth, setToken } from "../../store/Auth";
-import { useNavigate } from "react-router-dom";
+import { playlistPageAction } from "../../store/actions/playlistPageAction";
 
 const PlaylistPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
   const datas = useAppSelector((state) => state.Playlist.playlist);
   const dispatch = useAppDispatch();
   const [modaldata, setModalData] = useState([]);
-  const getPlaylist = async () => {
-    await getPlaylistApi()
-      .then((response) => {
-        dispatch(setPlaylist(response.data.items));
-      })
-      .catch((error) => {
-        if (error.request.status === 401) {
-          deleteStorage();
-          dispatch(setToken(""));
-          dispatch(setAuth(false));
-          navigate("/login");
-        }
-      });
-  };
+
   const playlistCard =
     datas.length > 0 ? (
       datas.map((playlist) => (
@@ -54,7 +36,7 @@ const PlaylistPage = () => {
       </Box>
     );
   useEffect(() => {
-    getPlaylist();
+    dispatch(playlistPageAction());
   }, []);
   return (
     <div>

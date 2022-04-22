@@ -31,7 +31,7 @@ const Routest = () => (
       >
         <Route index element={<CreatePlaylist />} />
         <Route path="playlist" element={<PlaylistPage />} />
-        <Route path="search" element={<TrackPage />} />
+        <Route path="track" element={<TrackPage />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="artist/:id" element={<ArtistsPage />} />
       </Route>

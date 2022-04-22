@@ -41,7 +41,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   };
 
   const input =
-    location.pathname === "/search" ? (
+    location.pathname === "/track" ? (
       <SearchInput />
     ) : location.pathname === "/" ? (
       <InputSong />

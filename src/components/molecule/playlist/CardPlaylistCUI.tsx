@@ -6,29 +6,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
-import { getTrackPlaylistApi } from "../../../api/res/PlaylistApi";
 import { playlistItem } from "../../../interface/utils";
 import { useAppDispatch } from "../../../app/hooks";
-import { setAuth, setToken } from "../../../store/Auth";
-import { useNavigate } from "react-router-dom";
-import { deleteStorage } from "../../../utils/storage";
+import { requestItemPlaylistAction } from "../../../store/actions/playlistPageAction";
 
 const CardPlaylistCUI = ({ data, event, onOpen }: playlistItem) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const requestItem = async () => {
-    getTrackPlaylistApi(data.tracks.href)
-      .then((response) => {
-        event(response.data.items);
-      })
-      .catch((error) => {
-        if (error.request.status === 401) {
-          deleteStorage();
-          dispatch(setToken(""));
-          dispatch(setAuth(false));
-          navigate("/login");
-        }
-      });
+  const requestItem = () => {
+    dispatch(requestItemPlaylistAction(data, event));
   };
 
   return (

@@ -33,7 +33,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
   { name: "Create Platlist", icon: FiHome, url: "", menu: false },
   { name: "Playlist", icon: FiTrendingUp, url: "/playlist", menu: true },
-  { name: "Search", icon: FiCompass, url: "/search", menu: false },
+  { name: "Track", icon: FiCompass, url: "/track", menu: false },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {

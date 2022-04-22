@@ -1,18 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../app/store';
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../app/store";
 
 interface AuthState {
-  token : string,
-  isAuth : boolean
+  token: string;
+  isAuth: boolean;
 }
 
 const initialState: AuthState = {
-  token: '',
-  isAuth : false
-}
+  token: "",
+  isAuth: false,
+};
 
 export const Auths = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setToken: (state, action) => {
@@ -21,11 +21,11 @@ export const Auths = createSlice({
     setAuth: (state, action) => {
       state.isAuth = action.payload;
     },
+    clear: () => initialState,
   },
-
 });
 
 // Action creators are generated for each case reducer function
-export const { setToken, setAuth } = Auths.actions;
-export const auths = (state: RootState) => state.Auth.token
+export const { setToken, setAuth, clear } = Auths.actions;
+export const auths = (state: RootState) => state.Auth.token;
 export default Auths.reducer;

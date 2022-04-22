@@ -7,22 +7,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  postItemPlaylistApi,
-  postNewPlaylistApi,
-} from "../../api/res/PlaylistApi";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import PlaylistForm from "../../components/molecule/forms/PlaylistForm";
 import { formPlaylistPost } from "../../interface/utils";
-import { setAuth, setToken } from "../../store/Auth";
-import { setSelectPlaylist, setSelectSong } from "../../store/Tracks";
-import { deleteStorage } from "../../utils/storage";
 import SearchSong from "./SearchSong";
+import createPlaylistAction from "../../store/actions/createPlaylistAction";
 
 const CreatePlaylist = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const token = useAppSelector((state) => state.Auth.token);
   const me = useAppSelector((state) => state.User.user);
   const select = useAppSelector((state) => state.Track.selectSong);
@@ -48,37 +40,16 @@ const CreatePlaylist = () => {
         description: playlist.description,
         public: true,
       };
-      try {
-        postNewPlaylistApi(me.id, data)
-          .then(async (response) => {
-            dispatch(setSelectPlaylist(response.data));
-            await postItemPlaylistApi(response.data.id, select[0].uri)
-              .then(() => {
-                setFromPlayList({ title: "", description: "" });
-                setIsLoading(false);
-                alert(`Anda Berhasil Membuat Playlist ${playlist.title}`);
-              })
-              .catch((error) => {
-                if (error.request.status === 401) {
-                  deleteStorage();
-                  dispatch(setToken(""));
-                  dispatch(setAuth(false));
-                  navigate("/login");
-                }
-              });
-          })
-          .catch((error) => {
-            if (error.request.status === 401) {
-              deleteStorage();
-              dispatch(setToken(""));
-              dispatch(setAuth(false));
-              navigate("/login");
-            }
-          });
-      } catch (error) {
-        setIsLoading(false);
-        console.log(error);
-      }
+      dispatch(
+        createPlaylistAction({
+          data,
+          me,
+          select,
+          playlist,
+          setFromPlayList,
+          setIsLoading,
+        })
+      );
     }
   };
   return (

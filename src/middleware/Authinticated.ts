@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getStorage } from "../utils/storage";
 import { useAppSelector } from "../app/hooks";
 
 type Props = {
@@ -8,12 +7,11 @@ type Props = {
 };
 const Authinticated = ({ children }: Props) => {
   const navigate = useNavigate();
-  const token = useAppSelector((state) => state.Auth.token);
-  useEffect(() => {
-    if (!getStorage("token") && !token) {
-      navigate("/login");
-    }
-  }, []);
+  const token = useAppSelector((state) => state.Auth.isAuth);
+
+  if (!token) {
+    navigate("/login");
+  }
 
   return children;
 };
