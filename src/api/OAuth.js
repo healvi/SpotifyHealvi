@@ -9,7 +9,7 @@ export const authGenerate = () => async (dispatch) => {
   if (istoken) {
     const isExpired =
     new Date().getTime() > new Date(parseInt(isAvaliable)).getTime();
-    if (isExpired || null) {
+    if (isExpired) {
       deleteStorage();
       dispatch(clear());
     } else {
